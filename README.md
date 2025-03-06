@@ -31,3 +31,7 @@ For PPO, use
 ```
 
 ## Evaluation
+For evaluation, use
+```
+python run/run.py --method COT --dataset Logiqa --num_of_data 0 -is_test True  --model_name Meta-Llama-3-8B-Instruct
+```
