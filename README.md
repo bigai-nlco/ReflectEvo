@@ -31,7 +31,11 @@ For PPO, use
 ```
 
 ## Evaluation
-For evaluation, use
+For evaluation, use the following command to test the performance of the model
 ```
 python run/run.py --method COT --dataset Logiqa --num_of_data 0 -is_test True  --model_name Meta-Llama-3-8B-Instruct
+```
+Then use the following command to measure the performance
+```
+python eval/count.py "your_result_path"
 ```
