@@ -6,5 +6,6 @@
    cd ReflectEvo
    ```
 2. Install Package
+   ```
    pip install -r requirements.txt
-3. 
+   ``` 
