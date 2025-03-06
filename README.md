@@ -1,5 +1,5 @@
 # ReflectEvo
-## Install
+## Installation
 1. Clone this repository and navigate to ReflectEvo folder
    ```
    git clone https://github.com/Sheng-Shu/ReflectEvo.git
@@ -9,3 +9,25 @@
    ```
    pip install -r requirements.txt
    ``` 
+## Reflection Generation
+All Reflection data can be found in https://huggingface.co/datasets/XinyiDong/ReflectEvo-460k
+
+For Reflection Generation, run
+```
+python run/run.py --method COT --dataset Logiqa --num_of_data 0 --demand_type 1 --model_name Meta-Llama-3-8B-Instruct
+```
+
+## Training
+
+For full-parameter SFT, use
+```
+```
+
+For parameter-efficient fine-tuning (PEFT), use
+```
+```
+For PPO, use
+```
+```
+
+## Evaluation
