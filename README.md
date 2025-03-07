@@ -5,7 +5,7 @@ We present a novel pipeline **ReflectEvo** to demonstrate that **small language 
 
 we propose a novel pipeline ReflectEvo, to automatically generate self-reflection data and leverage self-training to enhance LLM’s reflection capability.
 
-![Overall Pipeline](assests/overall.png)
+![Overall Pipeline](assets/overall.png)
 
 *Overview pipeline of ReflectEvo.* There are four key stages: (1) Initial thoughts and answers are collected from 10 tasks and 17 datasets, (2) Reflection Generation for erroneous samples including self-reflection and self-correction, (3) Reflection curation with positive, negative, and self-reflection samples, and (4) Reflection Tuning to enhance LLMs via self-training.
 
