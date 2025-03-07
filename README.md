@@ -3,6 +3,8 @@
 
 We present a novel pipeline **ReflectEvo** to demonstrate that small language models(SLMs) can enhance meta introspection through reflection learning.
 
+![Overall Diagram](assets/overall.png)
+
 ## Installation
 1. Clone this repository and navigate to ReflectEvo folder
    
