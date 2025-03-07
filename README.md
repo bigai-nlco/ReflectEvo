@@ -9,6 +9,15 @@ we propose a novel pipeline ReflectEvo, to automatically generate self-reflectio
 
 *Overview pipeline of ReflectEvo.* There are four key stages: (1) Initial thoughts and answers are collected from 10 tasks and 17 datasets, (2) Reflection Generation for erroneous samples including self-reflection and self-correction, (3) Reflection curation with positive, negative, and self-reflection samples, and (4) Reflection Tuning to enhance LLMs via self-training.
 
+## 📖 Table of contents
+- [Installation](#installation)
+- [Reflection Generation](#reflection-generation)
+    - [Datasets Download](#datasets-download)
+- [Training Guide](#training-guide)
+
+- [Citation](#citation)
+- [Acknowledgment](#acknowledgment)
+
 ## Installation
 1. Clone this repository and navigate to ReflectEvo folder
    
@@ -31,7 +40,7 @@ For Reflection Generation, run
 python run/run.py --method COT --dataset Logiqa --num_of_data 0 --demand_type 1 --model_name Meta-Llama-3-8B-Instruct
 ```
 
-## Training
+## Training Guide
 
 For full-parameter SFT, use
 ```
@@ -53,5 +62,9 @@ python run/run.py --method COT --dataset Logiqa --num_of_data 0 -is_test True  -
 ```
 Then use the following command to measure the performance
 ```
+
+## Citation
+
+## Acknowledgment
 python eval/count.py "your_result_path"
 ```
