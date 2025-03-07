@@ -17,7 +17,7 @@ We present a novel pipeline **ReflectEvo** to demonstrate that small language mo
    ```
    
 ## Reflection Generation
-All Reflection data can be found in https://huggingface.co/datasets/XinyiDong/ReflectEvo-460k
+All Reflection data can be found in 
 
 For Reflection Generation, run
 ```
