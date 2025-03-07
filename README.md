@@ -13,8 +13,12 @@ Building on this pipeline, we curate a large scale, diverse, and unsupervised re
 - [Statistics of ReflectEvo-460K](#statistics-of-reflectevo-460k)
 - [Installation](#installation)
 - [Reflection Generation](#reflection-generation)
+   -[Download the Data](#download-the-data)
+   -[Generate Reflection](#generate-reflection)
 - [Training Guide](#training-guide)
 - [Evaluation](#evaluation)
+   -[Generate Results](#generate-results)
+   -[Evaluate Performance](#evaluate-performance)
 - [Citation](#citation)
 - [Acknowledgment](#acknowledgment)
 
@@ -35,11 +39,12 @@ Install Package
    ```
    
 ## Reflection Generation
+### Download the Data
 You can download the **ReflectEvo-460K** data here: 
 
 You can also access our sample data [data/](data/).
 
-
+### Generate Reflection
 For Reflection Generation, run
 ```
 python run/run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/to/model
@@ -62,7 +67,7 @@ For PPO, use
 ```
 
 ## Evaluation
-**Step 1**: Generate results
+### Step 1: Generate Results
 
 For evaluation, use the following command to test the performance of the model for both one stage training and DPO training:
 
@@ -77,7 +82,7 @@ python run_c2/run.py --method COT --dataset Logiqa --num_of_data 0 -is_test True
 ```
 
 
-**Step 2**: Evaluate performance
+### Step 2: Evaluate Performance
 
 For datasets with multiple-answer questions, use the following command to evaluate the model's performance:
 
