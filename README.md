@@ -19,14 +19,14 @@ we propose a novel pipeline ReflectEvo, to automatically generate self-reflectio
 - [Acknowledgment](#acknowledgment)
 
 ## Installation
-1. Clone this repository and navigate to ReflectEvo folder
+Clone this repository and navigate to ReflectEvo folder
    
    ```
    git clone https://github.com/Sheng-Shu/ReflectEvo.git
    cd ReflectEvo
    ```
    
-2. Install Package
+Install Package
    
    ```
    pip install -r requirements.txt
