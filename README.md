@@ -1,5 +1,5 @@
-<h3 align="center">Improving Meta Introspection of Small LLMs by Learning Self-Reflection from Self-Generated Data</h3>
-<div align="center">
+<h2 align="center">Improving Meta Introspection of Small LLMs by Learning Self-Reflection from Self-Generated Data</h2>
+<p align="center">
 
 We present a novel pipeline **ReflectEvo** to demonstrate that small language models(SLMs) can enhance meta introspection through reflection learning.
 
