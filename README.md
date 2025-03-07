@@ -38,7 +38,7 @@ Install Package
 ## Reflection Generation
 You can download the **ReflectEvo-460K** data here: 
 
-You can also access our sample data data/.
+You can also access our sample data [data/](data/).
 
 
 
