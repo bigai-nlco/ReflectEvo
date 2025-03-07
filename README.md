@@ -19,8 +19,8 @@ we propose a novel pipeline ReflectEvo, to automatically generate self-reflectio
 - [Citation](#citation)
 - [Acknowledgment](#acknowledgment)
 
-## Statistics of ReflectEvo-460K
-
+## 📌Statistics of ReflectEvo-460K
+![Statistics](assets/statistics.png)
 ## Installation
 Clone this repository and navigate to ReflectEvo folder
    
