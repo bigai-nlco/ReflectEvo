@@ -10,6 +10,7 @@ we propose a novel pipeline ReflectEvo, to automatically generate self-reflectio
 *Overview pipeline of ReflectEvo.* There are four key stages: (1) Initial thoughts and answers are collected from 10 tasks and 17 datasets, (2) Reflection Generation for erroneous samples including self-reflection and self-correction, (3) Reflection curation with positive, negative, and self-reflection samples, and (4) Reflection Tuning to enhance LLMs via self-training.
 
 ## 📖 Table of contents
+- [Statistics of ReflectEvo-460K](#statistics-of-reflectionevo-460k)
 - [Installation](#installation)
 - [Reflection Generation](#reflection-generation)
     - [Datasets Download](#datasets-download)
@@ -17,6 +18,8 @@ we propose a novel pipeline ReflectEvo, to automatically generate self-reflectio
 - [Evaluation](#evaluation)
 - [Citation](#citation)
 - [Acknowledgment](#acknowledgment)
+
+## Statistics of ReflectEvo-460K
 
 ## Installation
 Clone this repository and navigate to ReflectEvo folder
