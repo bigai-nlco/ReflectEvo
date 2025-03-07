@@ -1,4 +1,5 @@
-# ReflectEvo
+<h2 align="center">Improving Meta Introspection of Small LLMs by Learning Self-Reflection from Self-Generated Data</h2>
+<p align="center">
 
 We present a novel pipeline **ReflectEvo** to demonstrate that small language models(SLMs) can enhance meta introspection through reflection learning.
 
@@ -17,7 +18,7 @@ We present a novel pipeline **ReflectEvo** to demonstrate that small language mo
    ```
    
 ## Reflection Generation
-All Reflection data can be found in https://huggingface.co/datasets/XinyiDong/ReflectEvo-460k
+All Reflection data can be found in 
 
 For Reflection Generation, run
 ```
@@ -32,7 +33,9 @@ For full-parameter SFT, use
 
 For parameter-efficient fine-tuning (PEFT), use
 ```
+python train_c2.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
+
 For PPO, use
 ```
 ```
