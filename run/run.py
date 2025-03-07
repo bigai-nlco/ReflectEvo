@@ -4,7 +4,7 @@ import json
 import yaml
 import sys
 from dataHelper import get_dataset
-from ..prompts.prompts import (            # 这里有修改！！！！！！改成有ans的refl了
+from ..prompts.prompts import (
     REASON_PROMPT,
     LOGIQA_FORMAT,
     MATH_FORMAT,
@@ -63,12 +63,11 @@ parser.add_argument("--num_of_data", "-n", type=int, help="number of data, 0 for
 parser.add_argument("--demand_type", "-dt", type=int, help="The type of demand for the reflection task. Choose from 1 to 32.", default=1) #is_Test为True时用Reflexion原始prompt
 parser.add_argument("--output_file", "-o", type=str, help="output directory", required=False)
 parser.add_argument("--model_name", "-mn", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
-parser.add_argument("--reflection", "-r", type=str, help="HOW to use refl,1:重新生成reflection，2用已有reflection，3不reflect", default="1")
+parser.add_argument("--reflection", "-r", type=str, help="HOW to use refl,1:regenerate reflection，2:use pre-stored reflection from existing dataset，3: Skip reflection generation", default="1")
 parser.add_argument("--model_config", "-mc", type=str, help="YAML file address for model configuration.", default="")
 parser.add_argument("--is_test", "-t", type=str, default="False")
 parser.add_argument("--use_scratchpad", "-usc", type=str, help="Whether to use scrathpad in prompt",default="True")
-parser.add_argument("--setting", "-s", type=str, default="")
-# 需要添加一个防止test重复的命名
+parser.add_argument("--setting", "-s", type=str, default="") #This flag adds a unique identifier to avoid name collisions
 args = parser.parse_args()
 args.use_first_answer = args.use_first_answer.lower() == "true"
 use_second_answer = args.use_second_answer.lower() == "true"
@@ -110,20 +109,16 @@ use_first_answer = args.use_first_answer
 print(f"use_first_answer: {use_first_answer}")
 
 if args.existing_dataset is None:
-    data = get_dataset(DATASET, NUM_OF_DATA, is_test=is_test)    # 传入的dataset应对大小写不敏感
-    use_first_answer=False  # 没传入文件必定没first answer
+    data = get_dataset(DATASET, NUM_OF_DATA, is_test=is_test)
+    use_first_answer=False
 else:
-    # 打开并读取a.jsonl文件
     with open(args.existing_dataset, 'r', encoding='utf-8') as file:
         ii = 0
         for line in file:
             if NUM_OF_DATA!=0 and i>=NUM_OF_DATA: break
             i+=1
-            # 每一行是一个json对象
             item = json.loads(line)
-            # 提取question和answer字段，并添加到列表中
             data.append(item)
-    print(f"选取了{args.existing_dataset}处作为dataset。")
 
 
 
@@ -164,7 +159,6 @@ if args.output_file is None:
         output_file = f"data_{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_{demand_type}_{args.reflection}_{args.use_scratchpad}.jsonl"
 else:
     output_file = args.output_file
-# 假设已存在的结果保存在 existing_results 列表中 直接在当前目录生成data
 existing_results = []
 print(output_file)
 try:
@@ -174,13 +168,13 @@ try:
 except FileNotFoundError:
     pass
 
-# 创建一个字典来快速查找已有结果
+
 existing_ids = {result["id"] for result in existing_results}
 
 def process_row(row):
     s_t=time.time()
-    if row["id"] in existing_ids:   # 把_id改为了id
-        return None  # 略过已经处理过的行
+    if row["id"] in existing_ids:
+        return None
 
     if 'test_list' in row:
         data = {
@@ -284,7 +278,6 @@ def process_row(row):
     output = []
     if use_first_answer == True:
         print("using first answer")
-        # 这里默认existing dataset是和输出一样的格式。但有时我们用quansen学长的代码，没有output项。所以需要判断。
         if "output" in row:
             curr_output = row['output'][0]
             agent.generated_answer = curr_output['generated_answer']
@@ -294,7 +287,7 @@ def process_row(row):
             agent.reflections = []
             agent.scratchpad = row["first_reason"]
             agent.generated_answer = row["first_answer"]
-    else:#第一轮回答
+    else:
         if(args.use_scratchpad.lower() == "true"):
             print("use scratchpad")
             agent.run(trail=1, setting=2,is_free_text=is_free_text)
@@ -321,10 +314,8 @@ def process_row(row):
     s_t=time.time()
     if is_correct:
         print(f"Answer t=1: {agent.generated_answer}")
-    # 修改：只有refl为True的时候才refl，否则一轮回答就行了
-    elif args.reflection=="1":    #use reflection(重新生成reflection)
+    elif args.reflection=="1":    #regenerate reflection
         reflections = agent.prompt_reflection(sample_size=SAMPLE_SIZE)
-        print("完成refl用的时间:", time.time()-s_t)
         s_t=time.time()
         if not isinstance(reflections, list):
             reflections = [reflections]
@@ -335,7 +326,6 @@ def process_row(row):
             else:
                 print("not use scratchpad")
                 agent.run(trail=2,setting=1,reflection=r,is_free_text=is_free_text)
-            print("基于refl再回答一次用的时间:", time.time()-s_t)
             s_t=time.time()
             is_correct = agent.is_correct()
             error = None
@@ -355,21 +345,17 @@ def process_row(row):
                     "reflection_source": reflect_llm.model_id,
                 }
             )
-    elif args.reflection == "2":#用已有的reflection
+    elif args.reflection == "2": #use pre-stored reflection
         print("use reflection")
         if "output" in row and isinstance(row["output"], list):
             outputs = row["output"]
             reflections = []
             for out in outputs:
-                # 输出调试信息，查看 out 的结构
                 # print(f"Current out: {out}")
                 if "reflections" in out:
                     reflection = out["reflections"]
-                    # 如果是字符串，直接添加
                     if isinstance(reflection, str):
                         reflections.append(reflection)
-            # 输出找到的所有字符串（包括 reflections 和其他字段）
-            # print(f"Collected reflections: {reflections}")
 
         s_t=time.time()
         if not isinstance(reflections, list):
@@ -381,7 +367,6 @@ def process_row(row):
             else:
                 print("not use scratchpad")
                 agent.run(trail=2,setting=1,reflection=r,is_free_text=is_free_text)
-            print("基于refl再回答一次用的时间:", time.time()-s_t)
             s_t=time.time()
             is_correct = agent.is_correct()
             error = None
@@ -398,10 +383,10 @@ def process_row(row):
                     "error": error,
                     "trail": 2,
                     "reasoning_source": reason_llm.model_id,
-                    "reflection_source": "gpt-4o-2024-08-06",
+                    "reflection_source": "pre-stored",
                 }
             )
-    elif args.reflection == "3":#不用reflection
+    elif args.reflection == "3":#skip reflection generation
         print("without reflection")
         s_t=time.time()
         if(args.use_scratchpad.lower() == "true"):
@@ -442,8 +427,7 @@ with open(output_file, "a") as f:
             result = process_row(row)
         if result is not None:
             f.write(json.dumps(result) + "\n")
-print("运行时间:", time.time()-start_time)
-print('run结束')
+print('finish')
 '''
 log += log_react_trial(agents, trial_n=2)
 correct, incorrect, halted = summarize_react_trial(agents)
