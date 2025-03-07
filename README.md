@@ -1,9 +1,9 @@
 <h1 align="center">Improving Meta Introspection of Small LLMs by Learning Self-Reflection from Self-Generated Data</h1>
 <p align="center">
 
-We present a novel pipeline **ReflectEvo** to demonstrate that **small language models(SLMs) can enhance meta introspection through reflection learning**. Building on this pipeline, we curate a large scale, diverse, and unsupervised reflection learning dataset ReflectEvo-460k containing 460k reflection samples derived from 17 source datasets spanning 10 tasks and domains. 
+We propose a novel pipeline **ReflectEvo**, to automatically generate self-reflection data and leverage self-training to enhance LLM’s reflection capability. 
 
-we propose a novel pipeline ReflectEvo, to automatically generate self-reflection data and leverage self-training to enhance LLM’s reflection capability.
+Building on this pipeline, we curate a large scale, diverse, and unsupervised reflection learning dataset **ReflectEvo-460k** containing 460k reflection samples derived from 17 source datasets spanning 10 tasks and domains.
 
 ![Overall Pipeline](assets/overall.png)
 
@@ -40,11 +40,11 @@ You can download the **ReflectEvo-460K** data here:
 You can also access our sample data [data/](data/).
 
 
-
 For Reflection Generation, run
 ```
-python run/run.py --method COT --dataset Logiqa --num_of_data 0 --demand_type 1 --model_name Meta-Llama-3-8B-Instruct
+python run/run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/to/model
 ```
+
 
 ## Training Guide
 
@@ -62,11 +62,28 @@ For PPO, use
 ```
 
 ## Evaluation
-For evaluation, use the following command to test the performance of the model
+For evaluation, use the following command to test the performance of the model for both one stage training and DPO training:
+
 ```
 python run/run.py --method COT --dataset Logiqa --num_of_data 0 -is_test True  --model_name Meta-Llama-3-8B-Instruct
 ```
-Then use the following command to measure the performance
+
+Use the following command to test the performance of the model for two stage training:
+
+```
+python run_c2/run.py --method COT --dataset Logiqa --num_of_data 0 -is_test True  --model_name Meta-Llama-3-8B-Instruct
+```
+
+For datasets with multiple-answer questions, use the following command to evaluate the model's performance:
+
+```
+python eval/count.py "path/to/your/results"
+```
+
+For questions with free-text answers, use the following command to evaluate the model's performance:
+
+```
+python eval/count_f1.py "path/to/your/results"
 ```
 
 ## Citation
