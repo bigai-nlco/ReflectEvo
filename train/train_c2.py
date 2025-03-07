@@ -44,24 +44,31 @@ def parse_args():
     parse.add_argument('--num_epochs', '-n', type=str, help='num_epochs', default='5')
     parse.add_argument('--epoch_delta', type=str, help='epoch delta', default=0)        # 如果是继续训练（resume=True），还要训练几轮
     parse.add_argument('--resume', type=str, help='resume from checkpoint', default=False)
-    parse.add_argument('--input_data', '-i', type=str, default="")
-    parse.add_argument('--output', type=str, help='resume from checkpoint', default="")   # 这里的model就不放在git目录下了。这里是训练的checkpoint存放的地方
+    parse.add_argument('--input_data', '-i', type=str, help='input data path',default="")
+    parse.add_argument('--output', type=str, help='output path', default="")   # 如果不指定，会在默认目录输出
     parse.add_argument('--model', '-m',  type=str, help='model full name', default="Meta-Llama-3-8B-Instruct")
+    parse.add_argument('--model_path', '-mp', type=str, help='path to model', default='')
     args = parse.parse_args()
     return args
 
 args = parse_args()
 model = args.model
 task = args.task
-peft_model_id = "/scratch/nlp/lijiaqi/RFL_new/model/" + args.version + model + '/' + task + args.num_epochs
-save_path = "/scratch/nlp/lijiaqi/RFL_new/model/" + args.version + model + '/' + task + str(int(args.num_epochs)+int(args.epoch_delta))
-model_path = f'/scratch2/nlp/plm/{model}'
-data_path = f'../data_train/{model}_{task}_train.jsonl'
+peft_model_id = "../model/" + args.version + model + '/' + task + args.num_epochs
+save_path = "../model/" + args.version + model + '/' + task + str(int(args.num_epochs)+int(args.epoch_delta))
+if args.model_path:
+    model_path = args.model_path
+else:
+    model_path = f'/path/to/model/{model}'
+if args.input_data:
+    data_path = args.input_data
+else:
+    data_path = f'../data_train/{model}_{task}_train.jsonl'
 # 这里的path是ckpt path
 if args.output: 
     path = args.output
 else:
-    path = f'../../model/c2_{task}_{model}/'
+    path = f'../model/c2_{task}_{model}/'
 # 将JSON文件转换为CSV文件
 
 # 逐行读取 JSONL 文件并构建 DataFrame

@@ -4,12 +4,12 @@ import re
 from typing import List
 from langchain.prompts import PromptTemplate
 import tiktoken
-from prompts import (
+from ..prompts.prompts import (
     REFLECTION_HEADER,
 )
-from envs.base_env import Env
-from envs.env_mbpp import MBPPEnv
-from llms_zz import VLLMGenerator
+from ..envs.base_env import Env
+from ..envs.env_mbpp import MBPPEnv
+from ..llms import VLLMGenerator
 
 def format_step(step: str) -> str:
     return step
@@ -423,4 +423,4 @@ class BatchCOTReflectAgent:
             reflections=self.reflections_str,
             question=self.question,
             scratchpad=self.scratchpad,
-        )
+            )

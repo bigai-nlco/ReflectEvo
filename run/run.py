@@ -13,7 +13,6 @@ from ..prompts.prompts import (            # 这里有修改！！！！！！�
     BIGBENCH_FREE_FORMAT,
     REFLECTION_PROMPT,
     REFLECTION_PROMPT_TEST,
-    REFLECTION_PROMPT_TEST_C2,
     DEMAND_TYPES,
     INT_TO_DEMAND_TYPES,
     DEMAND_TYPES_TO_INT
@@ -26,6 +25,7 @@ from ..prompts.fewshots import (
     BIGBENCH_FEWSHOTS,
     BIGBENCH_FREE_FEWSHOTS #bigbench freetext
 )
+from ..envs.env_hotpotqa import HotPotQAEnv
 from ..envs.env_logiqa import LogiQAEnv
 from ..envs.env_mbpp import MBPPEnv
 from ..envs.env_math import MATHEnv
@@ -37,7 +37,8 @@ import time
 '''from reflexion.hotpotqa_runs.util import (
     summarize_react_trial,
     log_react_trial,
-)'''
+)
+'''
 
 # 初始化 GPU 环境
 try:
@@ -54,38 +55,37 @@ except pynvml.NVMLError as err:
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--method", "-m", type=str, help="COT or ReAct", default="COT")
-parser.add_argument("--dataset", "-d", type=str, help="LogiQA, MATH or MBPP")
-parser.add_argument("--existing_dataset", "-ed", type=str, help="Regenerate it with the data generated earlier. Fill in the file path here")    # 传入is_test为真时，这项不能再传了
+parser.add_argument("--dataset", "-d", type=str, help="LogiQA, MATH, MBPP, Bigbench or Bigbenchfree") #bigbench free text
+parser.add_argument("--existing_dataset", "-ed", type=str, help="Regenerate it with the data generated earlier. Fill in the file path here")    # is_Test为True且没训练reason model时选用
 parser.add_argument("--use_first_answer", "-u", type=str, help="Whether to keep the first answer in existing dataset", default="true")  # 注意这里 ：默认为true，用已有output的数据，会默认使用其中的output。
+parser.add_argument("--use_second_answer", "-us", type=str, help="Whether to keep the second answer in existing dataset", default="false") # 如果为true，表明只是对已有的数据进行某些第二次回答的补全
 parser.add_argument("--num_of_data", "-n", type=int, help="number of data, 0 for all data", default=0)
-parser.add_argument("--demand_type", "-dt", type=int, help="The type of demand for the reflection task. Choose from 1 to 11.", default=1)
+parser.add_argument("--demand_type", "-dt", type=int, help="The type of demand for the reflection task. Choose from 1 to 32.", default=1) #is_Test为True时用Reflexion原始prompt
 parser.add_argument("--output_file", "-o", type=str, help="output directory", required=False)
 parser.add_argument("--model_name", "-mn", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
-parser.add_argument("--reflection", "-r", type=str, help="Whether to use refl", default="True")
+parser.add_argument("--reflection", "-r", type=str, help="HOW to use refl,1:重新生成reflection，2用已有reflection，3不reflect", default="1")
 parser.add_argument("--model_config", "-mc", type=str, help="YAML file address for model configuration.", default="")
 parser.add_argument("--is_test", "-t", type=str, default="False")
+parser.add_argument("--use_scratchpad", "-usc", type=str, help="Whether to use scrathpad in prompt",default="True")
 parser.add_argument("--setting", "-s", type=str, default="")
-parser.add_argument("--device1", "-d1", type=int, default=-1)
-parser.add_argument("--device2", "-d2", type=int, default=-1)
+# 需要添加一个防止test重复的命名
 args = parser.parse_args()
-args.reflection = args.reflection.lower() == "true"     # 识别whether to use refl
 args.use_first_answer = args.use_first_answer.lower() == "true"
-multi_device = False
-d1 = args.device1
-d2 = args.device2
-if args.device1 != args.device2:
-    multi_device = True
+use_second_answer = args.use_second_answer.lower() == "true"
 METHOD = args.method
 if args.dataset:
     DATASET = args.dataset.lower()
 NUM_OF_DATA = args.num_of_data
 MODEL_PATH = f'/path/to/model/{args.model_name}'
 FORMAT = ''
+
 test_suffix =''
+test_suffix = args.setting
 if args.is_test == "False":
     is_test=False
 else:
     is_test=True
+
 if args.model_config:
     with open(args.model_config, "r", encoding="utf-8") as file:
         config = yaml.safe_load(file)
@@ -94,22 +94,21 @@ if args.model_config:
         reason_llm = reflect_llm
     else:
         reason_llm = make_generator(config["reason_model_config"])
+        print("using device 0 to load reflect model")
+    # test_suffix = args.setting
 else:
     reason_llm = VLLMGenerator(MODEL_PATH)
     reflect_llm = reason_llm
-test_suffix = args.setting
-print("reflect_llm path: ", reflect_llm.model_id)
-
 sys.path.append("..")
 root = "../root/"
 
 few_shots = ""
 data = []
 
-print(args.reflection)
-
+print(f"args.reflection: {args.reflection}")
 use_first_answer = args.use_first_answer
-print(use_first_answer)
+print(f"use_first_answer: {use_first_answer}")
+
 if args.existing_dataset is None:
     data = get_dataset(DATASET, NUM_OF_DATA, is_test=is_test)    # 传入的dataset应对大小写不敏感
     use_first_answer=False  # 没传入文件必定没first answer
@@ -138,8 +137,14 @@ match DATASET:
     case "bigbenchfree": fewshots, FORMAT = BIGBENCH_FREE_FEWSHOTS, BIGBENCH_FREE_FORMAT
     case _: raise ValueError("Invalid dataset")
 
+if DATASET == "bigbenchfree":
+    is_free_text = True
+    print("is_free_text: True")
+else:
+    is_free_text = False
 demand_str = ""
 demand_type = args.demand_type
+print(f"demand_type: {demand_type}")
 if demand_type>0 and demand_type<=32:
     demand_str = DEMAND_TYPES[INT_TO_DEMAND_TYPES[args.demand_type]]
 else:
@@ -156,7 +161,7 @@ if args.output_file is None:
         output_file = f"data_test/{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_test_{test_suffix}.jsonl"
         SAMPLE_SIZE = 1
     else:
-        output_file = f"data_{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_{demand_type}.jsonl"
+        output_file = f"data_{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_{demand_type}_{args.reflection}_{args.use_scratchpad}.jsonl"
 else:
     output_file = args.output_file
 # 假设已存在的结果保存在 existing_results 列表中 直接在当前目录生成data
@@ -205,11 +210,6 @@ def process_row(row):
             ground_truth=row["answer"],
             is_react=is_react,
         )
-    elif DATASET == "logiqa":
-        env = LogiQAEnv(
-            ground_truth=row["answer"],
-            is_react=is_react,
-        )
     elif DATASET == "bigbench":
         env = BigbenchEnv(
             ground_truth=row["answer"],
@@ -221,35 +221,25 @@ def process_row(row):
             is_react=is_react,
         )
     else:
-        raise ValueError("no match dataset.")
+        env = LogiQAEnv(
+            ground_truth=row["answer"],
+            is_react=is_react,
+        )
     reason_prompt = REASON_PROMPT.replace('{format}', FORMAT)
     match METHOD:
         case "COT":
             if is_test:
-                if test_suffix == 'c2' or test_suffix == 'c2_qs' or test_suffix[:2]=='c2':
-                    agent = BatchCOTReflectAgent(
-                        question=row["question"],
-                        answer=row["answer"],
-                        reason_llm=reason_llm,
-                        reflect_llm=reflect_llm,
-                        env=env,
-                        agent_prompt=reason_prompt,
-                        reflect_prompt=REFLECTION_PROMPT_TEST_C2,
-                        examples=fewshots,
-                        demand=demand_str
-                    )
-                else:
-                    agent = BatchCOTReflectAgent(
-                        question=row["question"],
-                        answer=row["answer"],
-                        reason_llm=reason_llm,
-                        reflect_llm=reflect_llm,
-                        env=env,
-                        agent_prompt=reason_prompt,
-                        reflect_prompt=REFLECTION_PROMPT_TEST,
-                        examples=fewshots,
-                        demand=demand_str
-                    )
+                agent = BatchCOTReflectAgent(
+                    question=row["question"],
+                    answer=row["answer"],
+                    reason_llm=reason_llm,
+                    reflect_llm=reflect_llm,
+                    env=env,
+                    agent_prompt=reason_prompt,
+                    reflect_prompt=REFLECTION_PROMPT_TEST,
+                    examples=fewshots,
+                    demand=demand_str
+                )
             else:
                 agent = BatchCOTReflectAgent(
                     question=row["question"],
@@ -261,14 +251,39 @@ def process_row(row):
                     reflect_prompt=REFLECTION_PROMPT,
                     examples=fewshots,
                     demand=demand_str
-                ) 
+                )
+        case "ReAct":
+            if is_test:
+                agent = BatchReactReflectAgent(
+                    question=row["question"],
+                    answer=row["answer"],
+                    reason_llm=reason_llm,
+                    reflect_llm=reflect_llm,
+                    env=env,
+                    agent_prompt=HOTPOTQA_REACT_PROMPT,
+                    reflect_prompt=REFLECTION_PROMPT_TEST,
+                    examples=HOTPOTQA_REACT_EXAMPLES,
+                    demand=demand_str
+                )
+            else:
+                agent = BatchReactReflectAgent(
+                    question=row["question"],
+                    answer=row["answer"],
+                    reason_llm=reason_llm,
+                    reflect_llm=reflect_llm,
+                    env=env,
+                    agent_prompt=HOTPOTQA_REACT_PROMPT,
+                    reflect_prompt=REFLECTION_PROMPT,
+                    examples=HOTPOTQA_REACT_EXAMPLES,
+                    demand=demand_str
+                )
         case _:
             raise ValueError(f"Invalid method: {METHOD}")
     agents.append(agent)
     s_t=time.time()
     output = []
     if use_first_answer == True:
-        print("use_first_answer")
+        print("using first answer")
         # 这里默认existing dataset是和输出一样的格式。但有时我们用quansen学长的代码，没有output项。所以需要判断。
         if "output" in row:
             curr_output = row['output'][0]
@@ -278,9 +293,14 @@ def process_row(row):
         else:
             agent.reflections = []
             agent.scratchpad = row["first_reason"]
-            agent.generated_answer = row["first_answer"]  # 比较复杂，是从reflect_prompt中提取上一次的回答
-    else:
-        agent.run_c2(reflection='',trail=1)
+            agent.generated_answer = row["first_answer"]
+    else:#第一轮回答
+        if(args.use_scratchpad.lower() == "true"):
+            print("use scratchpad")
+            agent.run(trail=1, setting=2,is_free_text=is_free_text)
+        else:
+            print("not use scratchpad")
+            agent.run(trail=1, setting=1,is_free_text=is_free_text)#setting：1.不用scratchpad 2.用scratchpad
     is_correct = agent.is_correct()
     error = None
     if isinstance(is_correct, tuple):
@@ -301,17 +321,22 @@ def process_row(row):
     s_t=time.time()
     if is_correct:
         print(f"Answer t=1: {agent.generated_answer}")
-    # c2主要修改refl逻辑！！！
-    elif args.reflection:    # 修改：只有refl为True的时候才refl，否则一轮回答就行了
+    # 修改：只有refl为True的时候才refl，否则一轮回答就行了
+    elif args.reflection=="1":    #use reflection(重新生成reflection)
         reflections = agent.prompt_reflection(sample_size=SAMPLE_SIZE)
         print("完成refl用的时间:", time.time()-s_t)
         s_t=time.time()
         if not isinstance(reflections, list):
             reflections = [reflections]
-
-        # 这里得到refl就应该结束，判断是否正确，加入output。
         for i, r in enumerate(reflections):
-            agent.run_c2(reflection=r,trail=2)
+            if(args.use_scratchpad.lower() == "true"):
+                print("use scratchpad")
+                agent.run(trail=2,setting=2,reflection=r,is_free_text=is_free_text)
+            else:
+                print("not use scratchpad")
+                agent.run(trail=2,setting=1,reflection=r,is_free_text=is_free_text)
+            print("基于refl再回答一次用的时间:", time.time()-s_t)
+            s_t=time.time()
             is_correct = agent.is_correct()
             error = None
             if isinstance(is_correct, tuple):
@@ -330,7 +355,80 @@ def process_row(row):
                     "reflection_source": reflect_llm.model_id,
                 }
             )
+    elif args.reflection == "2":#用已有的reflection
+        print("use reflection")
+        if "output" in row and isinstance(row["output"], list):
+            outputs = row["output"]
+            reflections = []
+            for out in outputs:
+                # 输出调试信息，查看 out 的结构
+                # print(f"Current out: {out}")
+                if "reflections" in out:
+                    reflection = out["reflections"]
+                    # 如果是字符串，直接添加
+                    if isinstance(reflection, str):
+                        reflections.append(reflection)
+            # 输出找到的所有字符串（包括 reflections 和其他字段）
+            # print(f"Collected reflections: {reflections}")
 
+        s_t=time.time()
+        if not isinstance(reflections, list):
+            reflections = [reflections]
+        for i, r in enumerate(reflections):
+            if(args.use_scratchpad.lower() == "true"):
+                print("use scratchpad")
+                agent.run(trail=2,setting=2,reflection=r,is_free_text=is_free_text)
+            else:
+                print("not use scratchpad")
+                agent.run(trail=2,setting=1,reflection=r,is_free_text=is_free_text)
+            print("基于refl再回答一次用的时间:", time.time()-s_t)
+            s_t=time.time()
+            is_correct = agent.is_correct()
+            error = None
+            if isinstance(is_correct, tuple):
+                error = is_correct[1]
+                is_correct = is_correct[0]
+            print(f"Answer t=2-{i}: {agent.generated_answer}")
+            output.append(
+                {
+                    "generated_answer": agent.generated_answer,
+                    "reflections": agent.reflections,
+                    "scratchpad": agent.scratchpad,
+                    "is_correct": is_correct,
+                    "error": error,
+                    "trail": 2,
+                    "reasoning_source": reason_llm.model_id,
+                    "reflection_source": "gpt-4o-2024-08-06",
+                }
+            )
+    elif args.reflection == "3":#不用reflection
+        print("without reflection")
+        s_t=time.time()
+        if(args.use_scratchpad.lower() == "true"):
+            print("use scratchpad")
+            agent.run(trail=2,setting=2,is_free_text=is_free_text)
+        else:
+            print("not use scratchpad")
+            agent.run(trail=2,setting=1,is_free_text=is_free_text)
+        print("第二轮回答时间:", time.time()-s_t)
+        is_correct = agent.is_correct()
+        error = None
+        if isinstance(is_correct, tuple):
+            error = is_correct[1]
+            is_correct = is_correct[0]
+        print(f"Answer t=2: {agent.generated_answer}")
+        output.append(
+            {
+                "generated_answer": agent.generated_answer,
+                "reflections": agent.reflections,
+                "scratchpad": agent.scratchpad,
+                "is_correct": is_correct,
+                "error": error,
+                "trail": 2,
+                "reasoning_source": reason_llm.model_id,
+                "reflection_source": "none",
+            }
+        )
     data["output"] = output
     return data
 
@@ -338,7 +436,10 @@ start_time = time.time()
 with open(output_file, "a") as f:
     start_time = time.time()
     for i, row in enumerate(data):
-        result = process_row(row)
+        if use_second_answer and len(row["output"]) > 1:
+            result = row
+        else:
+            result = process_row(row)
         if result is not None:
             f.write(json.dumps(result) + "\n")
 print("运行时间:", time.time()-start_time)
@@ -349,4 +450,3 @@ correct, incorrect, halted = summarize_react_trial(agents)
 print(
     f"Finished Trial {2}, Correct: {len(correct)}, Incorrect: {len(incorrect)}, Halted: {len(halted)}"
 )'''
-
