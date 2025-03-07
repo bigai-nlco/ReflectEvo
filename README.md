@@ -36,7 +36,11 @@ Install Package
    ```
    
 ## Reflection Generation
-All Reflection data can be found in 
+You can download the **ReflectEvo-460K** data here: 
+
+You can also access our sample data data/.
+
+
 
 For Reflection Generation, run
 ```
