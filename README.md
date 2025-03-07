@@ -32,7 +32,9 @@ For full-parameter SFT, use
 
 For parameter-efficient fine-tuning (PEFT), use
 ```
+python train_c2.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
+
 For PPO, use
 ```
 ```
