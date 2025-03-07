@@ -99,5 +99,4 @@ python eval/count_f1.py "path/to/your/results"
 ## Citation
 
 ## Acknowledgment
-python eval/count.py "your_result_path"
-```
+
