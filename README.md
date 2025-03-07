@@ -1,7 +1,7 @@
-<h2 align="center">Improving Meta Introspection of Small LLMs by Learning Self-Reflection from Self-Generated Data</h2>
+<h1 align="center">Improving Meta Introspection of Small LLMs by Learning Self-Reflection from Self-Generated Data</h1>
 <p align="center">
 
-We present a novel pipeline **ReflectEvo** to demonstrate that **small language models(SLMs) can enhance meta introspection through reflection learning**.
+We present a novel pipeline **ReflectEvo** to demonstrate that **small language models(SLMs) can enhance meta introspection through reflection learning**. Building on this pipeline, we curate a large scale, diverse, and unsupervised reflection learning dataset ReflectEvo-460k containing 460k reflection samples derived from 17 source datasets spanning 10 tasks and domains. 
 
 we propose a novel pipeline ReflectEvo, to automatically generate self-reflection data and leverage self-training to enhance LLM’s reflection capability.
 
@@ -10,10 +10,9 @@ we propose a novel pipeline ReflectEvo, to automatically generate self-reflectio
 *Overview pipeline of ReflectEvo.* There are four key stages: (1) Initial thoughts and answers are collected from 10 tasks and 17 datasets, (2) Reflection Generation for erroneous samples including self-reflection and self-correction, (3) Reflection curation with positive, negative, and self-reflection samples, and (4) Reflection Tuning to enhance LLMs via self-training.
 
 ## 📖 Table of contents
-- [Statistics of ReflectEvo-460K](#statistics-of-reflectionevo-460k)
+- [Statistics of ReflectEvo-460K](#statistics-of-reflectevo-460k)
 - [Installation](#installation)
 - [Reflection Generation](#reflection-generation)
-    - [Datasets Download](#datasets-download)
 - [Training Guide](#training-guide)
 - [Evaluation](#evaluation)
 - [Citation](#citation)
