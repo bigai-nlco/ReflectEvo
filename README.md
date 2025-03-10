@@ -78,7 +78,7 @@ python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/t
 Use the following command to test the performance of the model for two stage training:
 
 ```
-python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python run_c2.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
