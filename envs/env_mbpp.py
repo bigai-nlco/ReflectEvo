@@ -1,4 +1,3 @@
-# 抛弃了React范式。记得改fewshots
 import sys
 import re
 import string
@@ -21,7 +20,6 @@ class MBPPEnv(Env):
         self._is_correct = False
         self._timeout_occurred = False
 
-    # 这里是处理格式的部分
     def parse_action(self, string):
         
         if '[BEGIN]' in string and '[END]' in string:
@@ -36,7 +34,7 @@ class MBPPEnv(Env):
                     extracted_text = string.split(start_token, 1)[1].split(end_token, 1)[0]
                     cleaned_text = extracted_text.replace("\\_", "_").replace("\_", "_").replace("\\r\\n", "\n").replace("\\n", "\n")
 
-                    # 修复缩进（如果代码没有正常缩进，则重新格式化）
+                    
                     cleaned_text = textwrap.dedent(cleaned_text)
                     return "Finish", cleaned_text
         '''
@@ -54,14 +52,14 @@ class MBPPEnv(Env):
         return result
 
     def _run_code_in_process(self, queue, candidate_code, test_list):
-        """子进程执行的代码（独立环境）"""
+        
         ns = {}
         error = ""
         is_correct = False
         try:
-            # 执行候选代码
+            # execute candidate code
             exec(candidate_code, ns, ns)
-            # 执行测试断言
+            # test correctness
             for test_cmd in test_list:
                 try:
                     exec(test_cmd, ns, ns)
@@ -72,12 +70,11 @@ class MBPPEnv(Env):
                 is_correct = True
         except Exception as e:
             error = f"Code execution error: {traceback.format_exc()}"
-        # 将结果放入队列
         queue.put((is_correct, error))
 
 
     def is_correct(self, candidate_code: str) -> (bool, str):
-        # 缓存逻辑保持不变
+        
         if candidate_code == self._cached_answer:
             return self._is_correct, self._cached_error
         
@@ -85,7 +82,7 @@ class MBPPEnv(Env):
         self._cached_error = ""
         self._is_correct = False
 
-        # 使用多进程    
+        
         queue = multiprocessing.Queue()
         process = multiprocessing.Process(
             target=self._run_code_in_process,
@@ -93,16 +90,16 @@ class MBPPEnv(Env):
         )
         process.start()
         
-        # 等待最多5秒
+        
         process.join(timeout=5)
         
-        # 如果进程仍然存活，说明超时
+        # time out
         if process.is_alive():
-            process.terminate()  # 强制终止进程
+            process.terminate()  
             process.join()
             self._cached_error = "Execution timed out after 5 seconds."
         else:
-            # 从队列中获取结果
+            
             if not queue.empty():
                 self._is_correct, self._cached_error = queue.get()
             else:

@@ -6,13 +6,15 @@ import torch
 from llms.base import LMGenerator
 
 
-class VLLMGenerator_2gpu(LMGenerator):
+class VLLMGenerator(LMGenerator):
     def __init__(self, model_path, log_file="vllm_generate.log"):
         self.model_name = ''
         match model_path:
-            case '/home/lijiaqi/PLMs/Meta-Llama-3-8B-Instruct': self.model_name = 'llama'
-            case '/home/lijiaqi/PLMs/gemma-2-9b-it': self.model_name = 'gemma'
-            case '/home/lijiaqi/PLMs/Mistral-7B-Instruct-v0.2': self.model_name = 'mistral'
+            case '/scratch2/nlp/plm/Meta-Llama-3-8B-Instruct': self.model_name = 'llama'
+            case '/scratch2/nlp/plm/Meta-Llama-3-70B-Instruct-GPTQ-Int4': self.model_name = 'llama'
+            case '/scratch2/nlp/plm/Meta-Llama-3-70B-GGUF': self.model_name = 'llama'
+            case '/scratch2/nlp/plm/gemma-2-9b-it': self.model_name = 'gemma'
+            case '/scratch2/nlp/plm/Mistral-7B-Instruct-v0.2': self.model_name = 'mistral'
         super().__init__(model_path, log_file)
         try:
             pynvml.nvmlInit()
@@ -28,8 +30,8 @@ class VLLMGenerator_2gpu(LMGenerator):
                 self.top_p = 0.9
                 self.top_k = -1
             if ("A800" in gpu_name) or ("A100" in gpu_name):
-                # 这里改一下，llama占0.3就行，其他的占0.3不够       咋又行了
-                self.llm = LLM(model=model_path, gpu_memory_utilization=0.3)
+                # 这里必须用0.3。虽然可能报错cuda out of mem, 但如果设为0.9，没办法跑两个mode
+                self.llm = LLM(model=model_path, gpu_memory_utilization=0.3, tensor_parallel_size=1)
                 '''if self.model_name == 'llama':
                     self.llm = LLM(model=model_path, gpu_memory_utilization=0.3)
                 else: 
@@ -43,6 +45,9 @@ class VLLMGenerator_2gpu(LMGenerator):
 
     def __call__(self, prompt, sample_size=1, prefix=None):
         tokenizer = self.llm.get_tokenizer()
+        if not getattr(tokenizer, 'chat_template', None):
+            tokenizer.chat_template = '''{% set loop_messages = messages %}{% for message in loop_messages %}{% set content = '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' %}{% if loop.index0 == 0 %}{% set content = bos_token + content %}{% endif %}{{ content }}{% endfor %}{% if add_generation_prompt %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}{% endif %}'''
+        #print("Chat Template: ", tokenizer.chat_template)
         if sample_size == 1:
             temperature = 0
         else:
@@ -98,13 +103,7 @@ class VLLMGenerator_2gpu(LMGenerator):
             )
         if prefix is not None:
             input_tokens += prefix
-        input_device = torch.device("cuda:1")  # 模型所在的设备
-        output_device = torch.device("cuda:0")  # 调用方希望接收结果的设备
-        if is_refl:
-            input_tokens = torch.tensor(input_tokens).to(input_device)
         output: RequestOutput = self.llm.generate([input_tokens], sampling_params)[0]
-        if is_refl:
-            output = output.to(output_device)
         self.LOGGER.debug("===Prompt LLM===")
         for i, data in enumerate(output.outputs):
             self.LOGGER.debug(

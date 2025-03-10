@@ -4,7 +4,7 @@ from langchain.agents.react.base import DocstoreExplorer
 from langchain_community.docstore.wikipedia import Wikipedia
 from .base_env import Env
 
-# 检验代码
+
 def _fix_fracs(string):
     substrs = string.split("\\frac")
     new_str = substrs[0]

@@ -70,14 +70,14 @@ class BigbenchEnv(Env):
         return None
 
     def is_correct(self, candidate_answer) -> bool:
-        # 从ground_truth提取答案
+        
         if isinstance(self.ground_truth, str):
             correct_answer = self.ground_truth
         else:
-            # 假设ground_truth是一个字典，包含多个条目，找到正确答案
+            
             correct_answer = self.ground_truth.get('answer', '')
 
-        # 检查答案是否匹配
+        
         if candidate_answer != self._cached_answer:
             self._cached_answer = candidate_answer
             self._is_correct = correct_answer.lower() == candidate_answer.lower()

@@ -58,7 +58,7 @@ Based on this information, please provide the following:
 Please follow the instructions without any additional introductory or concluding statements. Do not provide the answer directly. You will be punished to output more than 100 words.'''     # 这里加不超过200token的限制，让refl尽量短
 
 
-# 字典
+
 DEMAND_TYPES = {
 "1": 
 '''1.Identify the potential reasons for the incorrect solution.

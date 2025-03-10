@@ -75,7 +75,7 @@ class BigbenchfreeEnv(Env):
         """Lower text and remove punctuation, articles and extra whitespace."""
         if not isinstance(s, str):
             print(f"{s} is not a string")
-            return ""  # 如果不是字符串，返回空字符串
+            return ""
 
         def remove_articles(text):
             regex = re.compile(r'\b(a|an|the)\b', re.UNICODE)
@@ -99,12 +99,12 @@ class BigbenchfreeEnv(Env):
         return BigbenchfreeEnv.normalize_answer(s).split()
 
     def exact_match_score(self, candidate_answer):
-        """计算精确匹配分数."""
+        """get exact match score."""
         print(f"{candidate_answer}:candidate_answer")
         if isinstance(self.ground_truth, str):
             correct_answer = self.ground_truth
         else:
-            # 假设ground_truth是一个字典，包含多个条目，找到正确答案
+            
             correct_answer = self.ground_truth.get('answer', '')
         print(f"{correct_answer}:correct_answer")
         return (BigbenchfreeEnv.normalize_answer(correct_answer) == BigbenchfreeEnv.normalize_answer(candidate_answer))
@@ -116,12 +116,12 @@ class BigbenchfreeEnv(Env):
         if isinstance(self.ground_truth, str):
             correct_answer = self.ground_truth
         else:
-            # 假设ground_truth是一个字典，包含多个条目，找到正确答案
+            
             correct_answer = self.ground_truth.get('answer', '')
         print(f"{correct_answer}:correct_answer")
         gold_toks = BigbenchfreeEnv.get_tokens(correct_answer)
         pred_toks = BigbenchfreeEnv.get_tokens(candidate_answer)
-        common = Counter(gold_toks) & Counter(pred_toks)  # 找到重合的tokens
+        common = Counter(gold_toks) & Counter(pred_toks)  
         num_same = sum(common.values())
         
         if len(gold_toks) == 0 or len(pred_toks) == 0:
@@ -136,15 +136,15 @@ class BigbenchfreeEnv(Env):
         return f1
     
     def is_correct(self, candidate_answer) -> bool:
-        # 从ground_truth提取答案
+        
         print(f"{candidate_answer}:candidate_answer")
         if isinstance(self.ground_truth, str):
             correct_answer = self.ground_truth
         else:
-            # 假设ground_truth是一个字典，包含多个条目，找到正确答案
+            
             correct_answer = self.ground_truth.get('answer', '')
         print(f"{correct_answer}:correct_answer")
-        # 检查答案是否匹配
+        
         if BigbenchfreeEnv.normalize_answer(correct_answer) == BigbenchfreeEnv.normalize_answer(candidate_answer):
             self._is_correct = True
         else:

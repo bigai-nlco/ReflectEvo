@@ -30,7 +30,7 @@ class VLLMGenerator(LMGenerator):
                 self.top_p = 0.9
                 self.top_k = -1
             if ("A800" in gpu_name) or ("A100" in gpu_name):
-                # 这里必须用0.3。虽然可能报错cuda out of mem, 但如果设为0.9，没办法跑两个mode
+
                 self.llm = LLM(model=model_path, gpu_memory_utilization=0.3, tensor_parallel_size=1)
                 '''if self.model_name == 'llama':
                     self.llm = LLM(model=model_path, gpu_memory_utilization=0.3)
@@ -47,25 +47,25 @@ class VLLMGenerator(LMGenerator):
         tokenizer = self.llm.get_tokenizer()
         if not getattr(tokenizer, 'chat_template', None):
             tokenizer.chat_template = '''{% set loop_messages = messages %}{% for message in loop_messages %}{% set content = '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' %}{% if loop.index0 == 0 %}{% set content = bos_token + content %}{% endif %}{{ content }}{% endfor %}{% if add_generation_prompt %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}{% endif %}'''
-        #print("Chat Template: ", tokenizer.chat_template)
+
         if sample_size == 1:
             temperature = 0
         else:
             temperature = 0.8
         sampling_params = SamplingParams(
             n=sample_size,
-            # best_of=sample_size,
+
             temperature=temperature,
             top_p=self.top_p,
             top_k=self.top_k,
-            max_tokens=512,         # 这里原本是200！！！
+            max_tokens=512,
             stop_token_ids=[
                 tokenizer.eos_token_id,
                 tokenizer.convert_tokens_to_ids("<|eot_id|>"),
             ],
         )
         if isinstance(prompt, str):
-            if self.model_name == 'llama':      # 这里也要改。prob函数里可能也要改  现在都改成user了
+            if self.model_name == 'llama':
                 input_tokens = tokenizer.apply_chat_template(
                     [{"role": "user", "content": prompt}],
                     tokenize=False,
@@ -79,7 +79,7 @@ class VLLMGenerator(LMGenerator):
                 )
         elif isinstance(prompt, list):
             assert len(prompt) > 1
-            '''if self.model_name == 'llama':          # 除了llama外，其他llm都不支持sys_str
+            '''if self.model_name == 'llama':
                 input_tokens = tokenizer.apply_chat_template(
                     [{"role": "system", "content": prompt[0]}],
                     tokenize=False,
@@ -122,7 +122,7 @@ class VLLMGenerator(LMGenerator):
     def prob(self, prompt, prefix):
         tokenizer = self.llm.get_tokenizer()
         input_str = tokenizer.apply_chat_template(  
-            [{"role": "user", "content": prompt}],        # 这里也改成user吧
+            [{"role": "user", "content": prompt}],
             tokenize=False,
             add_generation_prompt=True,
         )
@@ -146,7 +146,7 @@ class VLLMGenerator(LMGenerator):
 
         result = dict()
 
-        # All output
+
 
         logprobs = output.prompt_logprobs[start_pos:]
         prefix_token_ids = (
@@ -156,7 +156,7 @@ class VLLMGenerator(LMGenerator):
             .squeeze()
             .tolist()
         )
-        # decoded_prefix_tokens = tokenizer.convert_ids_to_tokens(prefix_token_ids)
+
         prefix_logprobs = []
         for token_id, token_logprobs in zip(prefix_token_ids, logprobs):
             logprob = token_logprobs[token_id].logprob
@@ -169,11 +169,11 @@ class VLLMGenerator(LMGenerator):
         log_prob_sum = sum(prefix_logprobs) / len(prefix_logprobs)
         probability = math.exp(log_prob_sum)
         result["norm_ground_truth_all"] = probability
-        # result["string_all"] = prefix_string
 
-        # Fill-in ouptut
 
-        # HACK remove ['Action', ':', 'Finish']
+
+
+
         logprobs = output.prompt_logprobs[start_pos + 3 :]
         prefix_token_ids = (
             tokenizer(prefix, return_tensors="pt", add_special_tokens=False)[
@@ -182,43 +182,43 @@ class VLLMGenerator(LMGenerator):
             .squeeze()
             .tolist()[3:]
         )
-        # remove ['[', ']'] if possible
+
         if tokenizer.convert_ids_to_tokens(prefix_token_ids[0]) == '[':
             prefix_token_ids = prefix_token_ids[1:]
             logprobs = logprobs[1:]
         if tokenizer.convert_ids_to_tokens(prefix_token_ids[-1]) == ']':
             prefix_token_ids = prefix_token_ids[:-1]
             logprobs = logprobs[:-1]
-        # decoded_prefix_tokens = tokenizer.convert_ids_to_tokens(prefix_token_ids)
-        # # prefix_string = tokenizer.convert_tokens_to_string(decoded_prefix_tokens)
-        # # print(prefix_string)
-        # # print(decoded_prefix_tokens)
-        # prefix_logprobs = []
-        # for token_id, token_logprobs in zip(decoded_prefix_tokens, logprobs):
-        #     # Search for the logprob corresponding to the sampled token (token_id)
-        #     for logprob in token_logprobs.values():
-        #         if token_id.startswith("Ġ"):  # HACK
-        #             temp_token = " " + token_id[1:]
-        #         else:
-        #             temp_token = token_id
-        #         if logprob.decoded_token == temp_token:
-        #             prefix_logprobs.append(logprob.logprob)
-        #             self.LOGGER.debug(
-        #                 "LOGPROB of fill in: %s: %s",
-        #                 logprob.decoded_token,
-        #                 logprob.logprob,
-        #             )
-        #             break
-        #         else:
-        #             # Handle the case where the token_id is not found, which might happen in rare cases.
-        #             raise ValueError(
-        #                 f"Token ID {temp_token} not found in logprobs: {token_logprobs}"
-        #             )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         for token_id, token_logprobs in zip(prefix_token_ids, logprobs):
             logprob = token_logprobs[token_id].logprob
             prefix_logprobs.append(logprob)
-            # else:
-            #     raise ValueError(f"Token ID {token_id} not found in logprobs: {token_logprobs}")
+
+
 
         log_prob_sum = sum(prefix_logprobs)
         probability = math.exp(log_prob_sum)
@@ -227,6 +227,6 @@ class VLLMGenerator(LMGenerator):
         log_prob_sum = sum(prefix_logprobs) / len(prefix_logprobs)
         probability = math.exp(log_prob_sum)
         result["norm_ground_truth_fill_in"] = probability
-        # result["string_fill_in"] = prefix_string
+
 
         return result
