@@ -72,13 +72,13 @@ For PPO, use
 For evaluation, use the following command to test the performance of the model for both one stage training and DPO training:
 
 ```
-python run/run.py --method COT --dataset Logiqa --num_of_data 0 --is_test True  --model_name Meta-Llama-3-8B-Instruct
+python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 Use the following command to test the performance of the model for two stage training:
 
 ```
-python run.py --method COT --dataset Logiqa --num_of_data 0 --is_test True  --model_name Meta-Llama-3-8B-Instruct
+python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
