@@ -78,7 +78,7 @@ python run/run.py --method COT --dataset Logiqa --num_of_data 0 --is_test True  
 Use the following command to test the performance of the model for two stage training:
 
 ```
-python run_c2/run.py --method COT --dataset Logiqa --num_of_data 0 --is_test True  --model_name Meta-Llama-3-8B-Instruct
+python run.py --method COT --dataset Logiqa --num_of_data 0 --is_test True  --model_name Meta-Llama-3-8B-Instruct
 ```
 
 
