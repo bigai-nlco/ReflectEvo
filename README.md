@@ -53,32 +53,39 @@ python run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/t
 
 ## Training Guide
 
-For full-parameter SFT, use
+For full-parameter SFT, first use
 ```
+torchrun --master-port 5508 --nproc_per_node=1 train_SFT_two_stage_1.py --version 1 --task logiqa --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
+```
+
+then use
+```
+torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --version 1 --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
 
 For parameter-efficient fine-tuning (PEFT), use
 ```
-python run_SFT_two_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
+python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
-For PPO, use
+For DPO, use
 ```
+ACCELERATE_LOG_LEVEL=info accelerate launch --config_file accelerate_configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py training_configs/your_model_config
 ```
 
 ## Evaluation
 ### Generate Results
 
-For evaluation, use the following command to test the performance of the model for both one stage training and DPO training:
+For evaluation, use the following command to test the performance of the model for both SFT one stage training and DPO training:
 
 ```
 python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
-Use the following command to test the performance of the model for two stage training:
+Use the following command to test the performance of the model for SFT two stage training:
 
 ```
-python run_two_stage.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python run_PEFT.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
