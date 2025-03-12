@@ -55,12 +55,12 @@ python run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/t
 
 For full-parameter SFT, first use
 ```
-torchrun --master-port 5508 --nproc_per_node=1 train_c3.py --version 1 --task bigbenchfree --num_epochs 3 --resume False --output llama-3-bb-c5 --model_path Meta-Llama-3-8B-Instruct --template 1 --ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
+torchrun --master-port 5508 --nproc_per_node=1 train_SFT_two_stage_1.py --version 1 --task LogiQA --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
 ```
 
 then use
 ```
-torchrun --master-port 5507 --nproc_per_node=1 train.py --version 1 --task bigbenchfree --num_epochs 5 --resume False --output llama-3-bb-c2 --model_path Meta-Llama-3-8B-Instruct --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder data_train
+torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --version 1 --task LogiQA --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
 
 For parameter-efficient fine-tuning (PEFT), use
