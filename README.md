@@ -55,17 +55,17 @@ python run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/t
 
 For full-parameter SFT, first use
 ```
-torchrun --master-port 5508 --nproc_per_node=1 train_SFT_two_stage_1.py --version 1 --task LogiQA --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
+torchrun --master-port 5508 --nproc_per_node=1 train_SFT_two_stage_1.py --version 1 --task logiqa --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
 ```
 
 then use
 ```
-torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --version 1 --task LogiQA --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
+torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --version 1 --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
 
 For parameter-efficient fine-tuning (PEFT), use
 ```
-python run_SFT_two_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
+python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
 For DPO, use
