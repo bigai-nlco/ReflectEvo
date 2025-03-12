@@ -76,16 +76,16 @@ ACCELERATE_LOG_LEVEL=info accelerate launch --config_file accelerate_configs/dee
 ## Evaluation
 ### Generate Results
 
-For evaluation, use the following command to test the performance of the model for both one stage training and DPO training:
+For evaluation, use the following command to test the performance of the model for both SFT one stage training and DPO training:
 
 ```
 python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
-Use the following command to test the performance of the model for two stage training:
+Use the following command to test the performance of the model for SFT two stage training:
 
 ```
-python run_two_stage.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python run_PEFT.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
