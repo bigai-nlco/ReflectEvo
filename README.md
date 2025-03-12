@@ -47,7 +47,7 @@ You can also access our sample data [data/](data/).
 ### Generate Reflection
 For Reflection Generation, run
 ```
-python run/run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/to/model
+python run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/to/model
 ```
 
 
@@ -59,7 +59,7 @@ For full-parameter SFT, use
 
 For parameter-efficient fine-tuning (PEFT), use
 ```
-python train_c2.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
+python run_SFT_two_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
 For PPO, use
@@ -78,7 +78,7 @@ python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/t
 Use the following command to test the performance of the model for two stage training:
 
 ```
-python run_c2.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python run_two_stage.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
