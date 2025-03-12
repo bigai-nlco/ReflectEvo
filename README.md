@@ -70,7 +70,7 @@ python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --
 
 For DPO, use
 ```
-ACCELERATE_LOG_LEVEL=info accelerate launch --config_file accelerate_configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py training_configs/your_model_config
+ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py configs/DPO_train_config.yaml
 ```
 
 ## Evaluation
@@ -79,13 +79,13 @@ ACCELERATE_LOG_LEVEL=info accelerate launch --config_file accelerate_configs/dee
 For evaluation, use the following command to test the performance of the model for both SFT one stage training and DPO training:
 
 ```
-python run.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python run.py --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 Use the following command to test the performance of the model for SFT two stage training:
 
 ```
-python run_PEFT.py --method COT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python run_PEFT.py --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
