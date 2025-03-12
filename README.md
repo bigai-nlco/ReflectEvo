@@ -53,8 +53,14 @@ python run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/t
 
 ## Training Guide
 
-For full-parameter SFT, use
+For full-parameter SFT, first use
 ```
+torchrun --master-port 5508 --nproc_per_node=1 train_c3.py --version 1 --task bigbenchfree --num_epochs 3 --resume False --output llama-3-bb-c5 --model_path Meta-Llama-3-8B-Instruct --template 1 --ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
+```
+
+then use
+```
+torchrun --master-port 5507 --nproc_per_node=1 train.py --version 1 --task bigbenchfree --num_epochs 5 --resume False --output llama-3-bb-c2 --model_path Meta-Llama-3-8B-Instruct --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder data_train
 ```
 
 For parameter-efficient fine-tuning (PEFT), use
@@ -62,8 +68,9 @@ For parameter-efficient fine-tuning (PEFT), use
 python run_SFT_two_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
-For PPO, use
+For DPO, use
 ```
+ACCELERATE_LOG_LEVEL=info accelerate launch --config_file accelerate_configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py training_configs/your_model_config
 ```
 
 ## Evaluation
