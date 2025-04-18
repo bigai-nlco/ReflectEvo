@@ -3,7 +3,7 @@ import pynvml
 import json
 import yaml
 import sys
-from dataHelper import get_dataset
+from core.dataHelper import get_dataset
 from prompts.prompts import (
     REASON_PROMPT,
     LOGIQA_FORMAT,
@@ -32,7 +32,7 @@ from envs.env_math import MATHEnv
 from envs.env_bigbench import BigbenchEnv
 from envs.env_bigbench_free import BigbenchfreeEnv
 from llms import VLLMGenerator, make_generator
-from run.new_agents import BatchCOTReflectAgent, BatchReactReflectAgent
+from core.new_agents import BatchCOTReflectAgent, BatchReactReflectAgent
 import time
 
 
