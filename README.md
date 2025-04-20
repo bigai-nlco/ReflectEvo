@@ -40,15 +40,47 @@ Install Package
    
 ## Reflection Generation
 ### Download the Data
-You can download the **ReflectEvo-460K** data here: 
+You can download the **ReflectEvo-460K** data here: https://disk.pku.edu.cn/link/AADBE037EB31AB48878545A552DE2C9ACC
 
-You can also access our sample data [data/](data/).
+You can also access our sample data here [data/](data/).
 
 ### Generate Reflection
 For Reflection Generation, run
 ```
-python run.py --method COT --dataset Logiqa --demand_type 1 --model_name /path/to/model
+python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
 ```
+#### Arguments
+--dataset (required): The dataset to use. Options include:
+  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
+
+--existing_dataset (optional): Path to a previously generated dataset. If provided, the script will load and reuse this dataset.
+
+--use_first_answer (optional): Whether to keep the first answer from the existing dataset.
+
+--use_second_answer (optional): Whether to keep the second answer from the existing dataset.
+
+--num_of_data (optional): Number of samples to process. Set to 0 to process all available data.
+
+--demand_type (required): Instruction ID from the instruction pool. (See Appendix B.1).
+
+--output_file (optional): Output file path or directory for results.
+
+--model_name (optional): Name of the model to use.
+
+--reflection (optional): How to use reflection in the task. Options:
+  1: regenerate reflection
+  2: use pre-stored reflection
+  3: skip reflection generation
+
+--model_config (optional): Path to YAML file specifying model configuration.
+
+--is_test: Use "False" for data generation.
+
+--use_scratchpad (required): Whether to include the reasoning process from the first round in the second-round prompt.
+
+--setting (optional):
+Custom identifier or tag for this run.
+
 
 
 ## Training Guide
