@@ -64,7 +64,7 @@ python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
 
 --is_test(optional): Use "False" for data generation.
 
---use_scratchpad (required): Whether to include the reasoning process from the first round in the second-round prompt.
+--use_scratchpad (required): Whether to include the reasoning process from the first round in the second-round prompt.(Default: True)
 
 --existing_dataset (optional): Path to a previously generated dataset. If provided, the script will load and reuse this dataset.
 
@@ -74,12 +74,8 @@ python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
 
 --num_of_data (optional): Number of samples to process. Set to 0 to process all available data.
 
---output_file (optional): Output file path or directory for results.
-
 --model_config (optional): Path to YAML file specifying model configuration.
 
---setting (optional):
-Custom identifier or tag for this run.
 
 ## Training Guide
 
@@ -98,7 +94,7 @@ For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-bas
 python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
-For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>, use
+For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>(See Appendix B.2), use
 ```
 ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py configs/DPO_train_config.yaml
 ```
@@ -118,6 +114,35 @@ Use the following command to test the performance of the model for SFT two stage
 python run_PEFT.py --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
+#### Arguments
+--dataset (required): The dataset to use. Options include:
+  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
+
+--model_name (required): Name of the model to use.
+
+--is_test(required): Use "True" for evaluation.
+
+--model_config (optional): Path to YAML file specifying model configuration.
+
+--reflection (optional): How to use reflection in the task. Options: (Default: 1)
+  1: regenerate reflection
+  2: use pre-stored reflection
+  3: skip reflection generation
+
+--use_scratchpad (required): Whether to include the reasoning process from the first round in the second-round prompt.(Default: True)
+
+--existing_dataset (optional): Path to a previously generated dataset. If provided, the script will load and reuse this dataset.
+
+--use_first_answer (optional): Whether to keep the first answer from the existing dataset.
+
+--use_second_answer (optional): Whether to keep the second answer from the existing dataset.
+
+--num_of_data (optional): Number of samples to process. Set to 0 to process all available data.
+
+--output_file (optional): Output file path or directory for results.
+
+--setting (optional):
+Custom identifier or tag for this run.
 
 ### Evaluate Performance
 
