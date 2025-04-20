@@ -81,17 +81,15 @@ python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
 
 For two stage training with D<sup>+</sup>, we use full-parameter supervised fine-tuning (SFT)(See Appendix B.2). First use
 ```
-torchrun --master-port 5508 --nproc_per_node=1 train_SFT_two_stage_1.py --version 1 --task logiqa --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
+torchrun --master-port 5508 --nproc_per_node=1 train_SFT_two_stage_1.py --task logiqa --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path ---ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
 ```
 
 then use
 ```
-torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --version 1 --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
+torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
 
 #### Argument
---version (optional):
-Data version identifier.
 
 --task (required): The dataset to use. Options include:
   LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
@@ -100,7 +98,7 @@ Data version identifier.
 
 --epoch_delta (required): Epoch delta.(Default: 5)
 
---model_path (required): Path to the model to use.
+--model_path (required): Path to the base model.
 
 --folder (required): Folder containing training data.
 
@@ -110,8 +108,6 @@ Path to save or load training checkpoints.
 --resume (optional): Path to checkpoint to resume training from.
 
 --output (optional): Output file path for saving results or logs.
-
---template (optional):
 
 --checkpoint_num (required): Total number of checkpoints to save. (Default: 100)
 
@@ -129,10 +125,21 @@ Path to save or load training checkpoints.
 
 --gas (optional): Gradient accumulation steps. (Default: 4)
 
+
 For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
 ```
 python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
+
+#### Arguments
+--task (required): The dataset to use. Options include:
+  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
+
+--input_data(required): Folder containing training data.
+
+--output: Output file path for saving results or logs.
+
+--model_path: Path to the base model.
 
 For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>(See Appendix B.2), use
 ```
@@ -147,6 +154,7 @@ For evaluation, use the following command to test the performance of the model f
 ```
 python run.py --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
+
 
 Use the following command to test the performance of the model for SFT two stage training:
 
