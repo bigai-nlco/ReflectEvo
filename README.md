@@ -112,8 +112,6 @@ Path to save or load training checkpoints.
 --output (optional): Output file path for saving results or logs.
 
 --template (optional):
-Prompt template version.
-Default: "1".
 
 --checkpoint_num (required): Total number of checkpoints to save. (Default: 100)
 
