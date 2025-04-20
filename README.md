@@ -55,7 +55,7 @@ python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
 
 --demand_type (required): Instruction ID from the instruction pool. (See Appendix B.1).
 
---model_name (required): Name of the model to use.
+--model_name (required): Path to the model to use.
 
 --reflection (optional): How to use reflection in the task. Options: (Default: 1)
   1: regenerate reflection
@@ -88,6 +88,48 @@ then use
 ```
 torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --version 1 --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --template 1 --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
+
+#### Argument
+--version (optional):
+Data version identifier.
+
+--task (required): The dataset to use. Options include:
+  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
+
+--num_epochs (required): Number of training epochs.
+
+--epoch_delta (required): Epoch delta.(Default: 5)
+
+--model_path (required): Path to the model to use.
+
+--folder (required): Folder containing training data.
+
+--checkpoint_path (required):
+Path to save or load training checkpoints.
+
+--resume (optional): Path to checkpoint to resume training from.
+
+--output (optional): Output file path for saving results or logs.
+
+--template (optional):
+Prompt template version.
+Default: "1".
+
+--checkpoint_num (required): Total number of checkpoints to save. (Default: 100)
+
+--bs (optional): Training batch size. (Default: 4)
+
+--ebs (optional): Evaluation batch size. (Default: 30)
+
+--ss (optional): Save strategy. Example: "steps", "epoch", etc. (Default: "steps")
+
+--lr (optional): Learning rate.(Default: 0.00001)
+
+--wd (optional): Weight decay (L2 regularization). (Default: 0.0)
+
+--wr (optional): Warmup ratio for learning rate scheduling. (Default: 0.0)
+
+--gas (optional): Gradient accumulation steps. (Default: 4)
 
 For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
 ```
