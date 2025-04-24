@@ -49,32 +49,13 @@ For Reflection Generation, run
 ```
 python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
 ```
-#### Arguments
---dataset (required): The dataset to use. Options include:
-  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
+Open-source models can be downloaded and loaded from [Models/](Models/) by default, you can change the path via `--model_name`
 
---demand_type (required): Instruction ID from the instruction pool. (See Appendix B.1).
+Datasets can be selected via --dataset. Options include LogiQA, MATH, MBPP, Bigbench, and Bigbenchfree (a filtered subset of free-text tasks from BIG-bench).
 
---model_name (required): Path to the model to use.
+Instructions are specified using --demand_type, which corresponds to an instruction ID from the instruction pool (see Appendix B.1 for details).
 
---reflection (optional): How to use reflection in the task. Options: (Default: 1)
-  1: regenerate reflection
-  2: use pre-stored reflection
-  3: skip reflection generation
-
---is_test(optional): Use "False" for data generation.
-
---use_scratchpad (required): Whether to include the reasoning process from the first round in the second-round prompt.(Default: True)
-
---existing_dataset (optional): Path to a previously generated dataset. If provided, the script will load and reuse this dataset.
-
---use_first_answer (optional): Whether to keep the first answer from the existing dataset.
-
---use_second_answer (optional): Whether to keep the second answer from the existing dataset.
-
---num_of_data (optional): Number of samples to process. Set to 0 to process all available data.
-
---model_config (optional): Path to YAML file specifying model configuration.
+Reflection behavior is controlled with --reflection. It defaults to 1 (regenerate). You can also use 2 (load stored reflection) or 3 (skip reflection).
 
 
 ## Training Guide
@@ -89,57 +70,21 @@ then use
 torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
 
-#### Argument
+Use --task to specify the dataset.
 
---task (required): The dataset to use. Options include:
-  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
+Use --model_path to provide the path to the base model.
 
---num_epochs (required): Number of training epochs.
+Use --folder to specify the folder containing the training data.
 
---epoch_delta (required): Epoch delta.(Default: 5)
-
---model_path (required): Path to the base model.
-
---folder (required): Folder containing training data.
-
---checkpoint_path (required):
-Path to save or load training checkpoints.
-
---resume (optional): Path to checkpoint to resume training from.
-
---output (optional): Output file path for saving results or logs.
-
---checkpoint_num (required): Total number of checkpoints to save. (Default: 100)
-
---bs (optional): Training batch size. (Default: 4)
-
---ebs (optional): Evaluation batch size. (Default: 30)
-
---ss (optional): Save strategy. Example: "steps", "epoch", etc. (Default: "steps")
-
---lr (optional): Learning rate.(Default: 0.00001)
-
---wd (optional): Weight decay (L2 regularization). (Default: 0.0)
-
---wr (optional): Warmup ratio for learning rate scheduling. (Default: 0.0)
-
---gas (optional): Gradient accumulation steps. (Default: 4)
-
+Use --output to save results or logs.
 
 For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
 ```
 python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
-#### Arguments
---task (required): The dataset to use. Options include:
-  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
+Use --input_data to specify the folder containing the training data.
 
---input_data(required): Folder containing training data.
-
---output: Output file path for saving results or logs.
-
---model_path: Path to the base model.
 
 For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>(See Appendix B.2), use
 ```
@@ -163,34 +108,10 @@ python run_PEFT.py --dataset Logiqa --is_test True  --model_name /path/to/model 
 ```
 
 #### Arguments
---dataset (required): The dataset to use. Options include:
-  LogiQA, MATH, MBPP, Bigbench, Bigbenchfree(Filtered subset of freetext tasks from BIG-bench).
 
---model_name (required): Name of the model to use.
+set --is_test to "True" for evaluation.
 
---is_test(required): Use "True" for evaluation.
-
---model_config (optional): Path to YAML file specifying model configuration.
-
---reflection (optional): How to use reflection in the task. Options: (Default: 1)
-  1: regenerate reflection
-  2: use pre-stored reflection
-  3: skip reflection generation
-
---use_scratchpad (required): Whether to include the reasoning process from the first round in the second-round prompt.(Default: True)
-
---existing_dataset (optional): Path to a previously generated dataset. If provided, the script will load and reuse this dataset.
-
---use_first_answer (optional): Whether to keep the first answer from the existing dataset.
-
---use_second_answer (optional): Whether to keep the second answer from the existing dataset.
-
---num_of_data (optional): Number of samples to process. Set to 0 to process all available data.
-
---output_file (optional): Output file path or directory for results.
-
---setting (optional):
-Custom identifier or tag for this run.
+Use --model_config to specify the path to a YAML file containing the model configuration.
 
 ### Evaluate Performance
 
