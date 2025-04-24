@@ -51,11 +51,11 @@ python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
 ```
 Open-source models can be downloaded and loaded from [Models/](Models/) by default, you can change the path via `--model_name`
 
-Datasets can be selected via --dataset. Options include LogiQA, MATH, MBPP, Bigbench, and Bigbenchfree (a filtered subset of free-text tasks from BIG-bench).
+Datasets can be selected via `--dataset`. Options include LogiQA, MATH, MBPP, Bigbench, and Bigbenchfree (a filtered subset of free-text tasks from BIG-bench).
 
-Instructions are specified using --demand_type, which corresponds to an instruction ID from the instruction pool (see Appendix B.1 for details).
+Instructions are specified using `--demand_type`, which corresponds to an instruction ID from the instruction pool (see Appendix B.1 for details).
 
-Reflection behavior is controlled with --reflection. It defaults to 1 (regenerate). You can also use 2 (load stored reflection) or 3 (skip reflection).
+Reflection behavior is controlled with `--reflection`. It defaults to 1 (regenerate). You can also use 2 (load stored reflection) or 3 (skip reflection).
 
 
 ## Training Guide
@@ -70,20 +70,20 @@ then use
 torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
 
-Use --task to specify the dataset.
+Use `--task` to specify the dataset.
 
-Use --model_path to provide the path to the base model.
+Use `--model_path` to provide the path to the base model.
 
-Use --folder to specify the folder containing the training data.
+Use `--folder` to specify the folder containing the training data.
 
-Use --output to save results or logs.
+Use `--output` to save results or logs.
 
 For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
 ```
 python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
-Use --input_data to specify the folder containing the training data.
+Use `--input_data` to specify the folder containing the training data.
 
 
 For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>(See Appendix B.2), use
@@ -109,9 +109,9 @@ python run_PEFT.py --dataset Logiqa --is_test True  --model_name /path/to/model 
 
 #### Arguments
 
-set --is_test to "True" for evaluation.
+Set `--is_test` to "True" for evaluation.
 
-Use --model_config to specify the path to a YAML file containing the model configuration.
+Use `--model_config` to specify the path to a YAML file containing the model configuration.
 
 ### Evaluate Performance
 
