@@ -40,7 +40,7 @@ You can also access our sample data here [data/](data/).
 ### Generate Reflection
 For Reflection Generation, run
 ```
-python run.py --dataset Logiqa --demand_type 1 --model_name /path/to/model
+python -m run.run --dataset Logiqa --demand_type 1 --model_name /path/to/model
 ```
 Open-source models can be downloaded and loaded from [Models/](Models/) by default, you can change the path via `--model_name`
 
@@ -92,14 +92,14 @@ Use DeepSpeed Zero3 to accelerate and run run_dpo.py. The num_processes paramete
 For evaluation, use the following command to test the performance of the model for both SFT one stage training and DPO training:
 
 ```
-python run.py --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python -m run.run --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
 Use the following command to test the performance of the model for SFT two stage training:
 
 ```
-python run_PEFT.py --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python -m run.run_PEFT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 #### Arguments
@@ -113,13 +113,13 @@ Use `--model_config` to specify the path to a YAML file containing the model con
 For datasets with multiple-answer questions, use the following command to evaluate the model's performance:
 
 ```
-python eval/count.py "path/to/your/results"
+python -m eval.count "path/to/your/results"
 ```
 
 For questions with free-text answers, use the following command to evaluate the model's performance:
 
 ```
-python eval/count_f1.py "path/to/your/results"
+python -m eval.count_f1 "path/to/your/results"
 ```
 
 ## Citation
