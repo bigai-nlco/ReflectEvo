@@ -71,6 +71,7 @@ Use `--folder` to specify the folder containing the training data.
 
 Use `--output` to save results or logs.
 
+
 For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
 ```
 python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
@@ -83,6 +84,7 @@ For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<
 ```
 ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py configs/DPO_train_config.yaml
 ```
+Use DeepSpeed Zero3 to accelerate and run run_dpo.py. The num_processes parameter represents the number of GPUs, and DPO_train_config.yaml contains the training configuration.
 
 ## Evaluation
 ### Generate Results
