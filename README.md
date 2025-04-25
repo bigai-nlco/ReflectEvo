@@ -7,7 +7,7 @@ Building on this pipeline, we curate a large scale, diverse, and unsupervised re
 
 ![Overall Pipeline](assets/overall.png)
 
-*Overview pipeline of ReflectEvo.* There are four key stages: (1) Initial thoughts and answers are collected from 10 tasks and 17 datasets, (2) Reflection Generation for erroneous samples including self-reflection and self-correction, (3) Reflection curation with positive, negative, and self-reflection samples, and (4) Reflection Tuning to enhance LLMs via self-training.
+*Overview pipeline of ReflectEvo.* There are four key stages: (1) Initial thoughts and answers are collected from 10 tasks and 17 datasets, (2) Reflection Generation for erroneous samples including self-reflection and self-correction, (3) Reflection curation (4) Reflection Tuning to enhance LLMs via self-training.
 
 ## 📖 Table of contents
 - [Statistics of ReflectEvo-460K](#statistics-of-reflectevo-460k)
