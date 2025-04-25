@@ -1,4 +1,4 @@
-from datasets import Dataset
+from core.datasets import Dataset
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM, DataCollatorForSeq2Seq, TrainingArguments, Trainer, GenerationConfig, BitsAndBytesConfig, EarlyStoppingCallback, IntervalStrategy
 import torch
