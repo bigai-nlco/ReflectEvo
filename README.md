@@ -28,11 +28,6 @@ Clone this repository and navigate to ReflectEvo folder
    ```
    git clone https://github.com/Sheng-Shu/ReflectEvo.git
    cd ReflectEvo
-   ```
-   
-Install Package
-   
-   ```
    pip install -r requirements.txt
    ```
    
