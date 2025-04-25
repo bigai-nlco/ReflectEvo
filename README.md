@@ -55,12 +55,12 @@ Reflection behavior is controlled with `--reflection`. It defaults to 1 (regener
 
 For two stage training with D<sup>+</sup>, we use full-parameter supervised fine-tuning (SFT)(See Appendix B.2). First use
 ```
-torchrun --master-port 5508 --nproc_per_node=1 train_SFT_two_stage_1.py --task logiqa --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path ---ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
+PYTHONPATH=. torchrun --master-port 5508 --nproc_per_node=1 train/train_SFT_two_stage_1.py --task logiqa --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path ---ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
 ```
 
 then use
 ```
-torchrun --master-port 5507 --nproc_per_node=1 train_SFT_two_stage_2.py --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
+PYTHONPATH=. torchrun --master-port 5507 --nproc_per_node=1 train/train_SFT_two_stage_2.py --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
 ```
 
 Use `--task` to specify the dataset.
@@ -74,7 +74,7 @@ Use `--output` to save results or logs.
 
 For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
 ```
-python run_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
+PYTHONPATH=. python train/train_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
 ```
 
 Use `--input_data` to specify the folder containing the training data.
