@@ -11,12 +11,12 @@ import json
 import deepspeed
 from accelerate import infer_auto_device_map
 
-project_path = # TODO: Replace here with your project absolute path
+project_path = '/scratch/nlp/lijiaqi/ReflectEvo' # TODO: Replace here with your project absolute path
 os.environ['WANDB_PROJECT'] = 'reflection-training'
 os.environ['WANDB_LOG_MODEL'] = 'checkpoint'
 os.environ['WANDB_WATCH'] = 'all'
 os.environ['WANDB_SILENT'] = 'False'
-os.environ['WANDB_CACHE_DIR'] = # TODO: Replace here with your cache folder, if you prefer to use the default dir, delete this line
+os.environ['WANDB_CACHE_DIR'] = 'cache'# TODO: Replace here with your cache folder, if you prefer to use the default dir, delete this line
 os.environ['TOKENIZERS_PARALLELISM'] = "true"
 attn_implementation = "flash_attention_2"
 torch_dtype = torch.bfloat16
@@ -74,10 +74,10 @@ def parse_args():
 args = parse_args()
 attn_implementation = "eager" if "gemma" in args.model_path else "flash_attention_2"
 print("==========Loading Tokenizer and Models==========")
-model_path = # TODO: Replace your model path here, 
+model_path = {args.model_path}# TODO: Replace your model path here, 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 tokenizer.pad_token = tokenizer.eos_token
-path = # TODO: Replace here with your path to checkpoints if args.checkpoint_path == "" else args.checkpoint_path
+path = {args.checkpoint_path}# TODO: Replace here with your path to checkpoints if args.checkpoint_path == "" else args.checkpoint_path
 if args.resume == 'True':
     model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16, attn_implementation=attn_implementation)
     num_train = int(args.epoch_delta)

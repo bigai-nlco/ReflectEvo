@@ -143,7 +143,6 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
 
     if number > 0:
         if number > len(output):
-            print(f"警告：请求的样本数量 {number} 超过了数据集的总样本数 {len(output)}，将返回所有样本。")
             number = len(output)
         output = random.sample(output, number)
 
