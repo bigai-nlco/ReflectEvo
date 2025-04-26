@@ -45,9 +45,9 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
     if dataset_name == "logiqa":
 
         if is_test == True:
-            file_path = "/path/to/logiqa_test.jsonl"
+            file_path = "data/data_source/logiqa_test.jsonl"
         else:
-            file_path = "/path/to/LogiQA/Train.jsonl"
+            file_path = "data/data_source/logiqa_train.jsonl"
         with open(file_path, 'r', encoding='utf-8') as f:
             for idx, line in enumerate(f):
                 data = json.loads(line)
@@ -58,9 +58,9 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
                 })
     elif dataset_name == "mbpp":
         if is_test == True:
-            file_path = "/path/to/mbpp_test.jsonl"
+            file_path = "data/data_source/mbpp_test.jsonl"
         else:
-            file_path = "/path/to/MBPP/Train.jsonl"
+            file_path = "data/data_source/mbpp_train.jsonl"
         with open(file_path, 'r', encoding='utf-8') as f:
             for idx, line in enumerate(f):
                 data = json.loads(line)
@@ -73,7 +73,7 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
     elif dataset_name == "math":
 
         if is_test == True:
-            file_path = "/path/to/test_data/math_test.jsonl"
+            file_path = "data/data_source/math_test.jsonl"
             with open(file_path, 'r', encoding='utf-8') as f:
                 for idx, line in enumerate(f):
                     data = json.loads(line)
@@ -101,7 +101,7 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
                 })
     elif dataset_name == "bigbench":
         if is_test == True:
-            with open("/path/to/bigbench_test.jsonl",'r',encoding='utf-8') as f:
+            with open("data/data_source/bigbench_test.jsonl",'r',encoding='utf-8') as f:
                 for idx, line in enumerate(f):
                     data = json.loads(line)
                     output.append({
@@ -110,7 +110,7 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
                         "answer": data["answer"]
                     })
         else:
-            with open("/path/to/bigbench_multiple_choice_one_answer.jsonl", 'r', encoding='utf-8') as f:
+            with open("data/data_source/bigbench_train.jsonl", 'r', encoding='utf-8') as f:
                 for idx, line in enumerate(f):
                     data = json.loads(line)
                     output.append({
@@ -120,7 +120,7 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
                     })
     elif dataset_name == "bigbenchfree":
          if is_test == True:
-            with open("/path/to/bigbenchfree_test.jsonl",'r',encoding='utf-8') as f:
+            with open("data/data_source/bigbenchfreetext_test.jsonl",'r',encoding='utf-8') as f:
                 for idx, line in enumerate(f):
                     data = json.loads(line)
                     output.append({
@@ -129,7 +129,7 @@ def get_dataset(dataset_name, number=0, seed=22, is_test=False, train_eval='', i
                         "answer": data["answer"]
                     })
          else:
-            with open("/path/to/bigbench_freetext.jsonl", 'r', encoding='utf-8') as f:
+            with open("data/data_source/bigbenchfreetext_train.jsonl", 'r', encoding='utf-8') as f:
                 for idx, line in enumerate(f):
                     data = json.loads(line)
                     output.append({

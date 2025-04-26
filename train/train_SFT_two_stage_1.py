@@ -1,4 +1,4 @@
-from core.datasets import Dataset
+from datasets import Dataset
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM, DataCollatorForSeq2Seq, TrainingArguments, Trainer, GenerationConfig, BitsAndBytesConfig, EarlyStoppingCallback, IntervalStrategy
 import torch
@@ -11,12 +11,12 @@ import json
 import deepspeed
 from accelerate import infer_auto_device_map
 
-project_path = '/scratch/nlp/lijiaqi/ReflectEvo' # TODO: Replace here with your project absolute path
+project_path = "/home/lijiaqi/ReflectEvo" # TODO: Replace here with your project absolute path
 os.environ['WANDB_PROJECT'] = 'reflection-training'
 os.environ['WANDB_LOG_MODEL'] = 'checkpoint'
 os.environ['WANDB_WATCH'] = 'all'
 os.environ['WANDB_SILENT'] = 'False'
-os.environ['WANDB_CACHE_DIR'] = 'cache'# TODO: Replace here with your cache folder, if you prefer to use the default dir, delete this line
+os.environ['WANDB_CACHE_DIR'] = "cache" # TODO: Replace here with your cache folder, if you prefer to use the default dir, delete this line
 os.environ['TOKENIZERS_PARALLELISM'] = "true"
 attn_implementation = "flash_attention_2"
 torch_dtype = torch.bfloat16
@@ -74,10 +74,10 @@ def parse_args():
 args = parse_args()
 attn_implementation = "eager" if "gemma" in args.model_path else "flash_attention_2"
 print("==========Loading Tokenizer and Models==========")
-model_path = {args.model_path}# TODO: Replace your model path here, 
+model_path = args.model_path # TODO: Replace your model path here, 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 tokenizer.pad_token = tokenizer.eos_token
-path = {args.checkpoint_path}# TODO: Replace here with your path to checkpoints if args.checkpoint_path == "" else args.checkpoint_path
+path = args.checkpoint_path # TODO: Replace here with your path to checkpoints if args.checkpoint_path == "" else args.checkpoint_path
 if args.resume == 'True':
     model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16, attn_implementation=attn_implementation)
     num_train = int(args.epoch_delta)
@@ -95,7 +95,7 @@ print("==========Loading Dataset==========")
 
 print(f"Training with task {args.task} at output {args.folder}")
 print("Training with second stage of Reflection")
-data_path = f'{project_path}/data/{args.folder}/{args.model_path}_{args.task}_train.jsonl'
+data_path = f'{project_path}/data/D+/{args.model_path}_{args.task}_train.jsonl'
 # 逐行读取 JSONL 文件并构建 DataFrame
 df = pd.read_json(data_path, lines=True)  # 这里要改成其他路径
 # 提取需要的字段并重命名为 input 和 output

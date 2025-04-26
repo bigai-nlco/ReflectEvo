@@ -148,10 +148,10 @@ model_name = args.model_name
 
 if args.output_file is None:
     if is_test:
-        output_file = f"data_test/{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_test_{test_suffix}.jsonl"
+        output_file = f"data/data_test/{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_test_{test_suffix}.jsonl"
         SAMPLE_SIZE = 1
     else:
-        output_file = f"data_{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_{demand_type}_{args.reflection}_{args.use_scratchpad}.jsonl"
+        output_file = f"data/data_raw/{model_name}/{DATASET}_{METHOD}-generated_{NUM_OF_DATA}_{demand_type}_{args.reflection}_{args.use_scratchpad}.jsonl"
 else:
     output_file = args.output_file
 existing_results = []
