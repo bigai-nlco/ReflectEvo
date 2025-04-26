@@ -63,7 +63,7 @@ else:
 if args.input_data:
     data_path = args.input_data
 else:
-    data_path = f'../data_train/{model}_{task}_train.jsonl'
+    data_path = f'data/data_train/{model}_{task}_train.jsonl'
 
 if args.output: 
     path = args.output
