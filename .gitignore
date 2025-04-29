@@ -3,3 +3,8 @@ data/data_test
 data/data_raw
 data/data_source
 logs
+*.log
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
