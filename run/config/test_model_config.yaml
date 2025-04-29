@@ -1,0 +1,36 @@
+run_config:
+  method: COT # COT | ReAct
+  use_cachedscractpad: False # Regenerate trail-1 reasoning if True, i.e., ignore `output[0]`
+  single_model: False # Use reflexion model for reasoning if True (WILL IGNORE reasoning_model_config); load two model seperatelyif False
+  test_round: 3 # 1 at least; reflexion N - 1 times
+  test_style: vote # single_trail | vote | reflexion
+  truncate_value: 0 # K: will use the first K questions if K > 0, will run with full input if K <= 0
+
+setting_type: 3
+reflect_model_config:
+  loader: peft # peft | vllm | tonggpt
+  model_path: /path/to/model
+  lora_path: /path/to/checkpoint
+  log_file: reflexion.log
+
+reason_model_config:
+  loader: vllm # peft | vllm | tongpt
+  model_path: /path/to/model
+  log_file: reasoning.log
+
+# Sample input json:
+# addional fields are allowed, but will not be used
+# {
+#     "question": "The Oberoi family is part of a hotel company that has a head office in what city?",
+#     "answer": "Delhi",
+#     # `output[0]` is required if `use_cachedscractpad` is True (will rejudge it even is use cached scratchpad)
+#     "output": [ 
+#         {
+#             "generated_answer": "New Delhi",
+#             "scratchpad": "\nThought: I know that the Oberoi group is a well-known hospitality chain with hotels all over the world. They were founded by Maharaja Mahendra Singh Oberoi in India. After researching, I found that their headquarters is located in New Delhi, India.Now it's time to take action! \nAction: Finish[New Delhi]\nObservation: Answer is INCORRECT",
+#         }
+#         # `output[i]`, i > 1 will be dropped. 
+#     ]
+# }
+
+
