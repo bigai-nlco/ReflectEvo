@@ -55,7 +55,8 @@ def parse_args():
     parse.add_argument('--epoch_delta', type=str, help='epoch delta', default="5")
     parse.add_argument('--resume', type=str, help='resume from checkpoint')
     parse.add_argument('--output', type=str, help='output file path')
-    parse.add_argument('--model_path', type=str, help='base model path', default="Meta-Llama-3-8B-Instructs")
+    parse.add_argument('--model_name', type=str, help='base model name', default="Meta-Llama-3-8B-Instruct")
+    parse.add_argument('--model_path', type=str, help='base model path', default="Meta-Llama-3-8B-Instruct")
     parse.add_argument('--template', type=str, help='template', default="1")
     parse.add_argument('--checkpoint_num', type=str, help='checkpoint number', default="100")
     parse.add_argument('--bs', type=int, help='batch size', default=4)
@@ -95,8 +96,9 @@ print("==========Loading Dataset==========")
 
 print(f"Training with task {args.task} at output {args.folder}")
 print("Training with second stage of Reflection")
-data_path = f'{project_path}/data/D+/{args.model_path}_{args.task}_train.jsonl'
+data_path = f'data/data_train/D+/{args.model_name}_{args.task}_train.jsonl'
 # 逐行读取 JSONL 文件并构建 DataFrame
+print("Loading data from:", data_path)
 df = pd.read_json(data_path, lines=True)  # 这里要改成其他路径
 # 提取需要的字段并重命名为 input 和 output
 df['input'] = df['reason_prompt'].apply(lambda x: x[1])
@@ -107,7 +109,7 @@ ds = Dataset.from_pandas(df[['input', 'output']])
 tokenized_id = ds.map(process_func, remove_columns=ds.column_names)
 # import pdb; pdb.set_trace()
 # breakpoint()
-eval_path = f'{project_path}/data/{args.folder}/{args.model_path}_{args.task}_eval.jsonl'
+eval_path = f'data/data_train/D+/{args.model_name}_{args.task}_eval.jsonl'
 eval_df = pd.read_json(eval_path, lines=True)
 # 提取需要的字段并重命名为 input 和 output
 eval_df['input'] = eval_df['reason_prompt'].apply(lambda x: x[1])
@@ -155,7 +157,7 @@ def preprocess_logits_for_metrics(logits, labels):
 
 print("==========Loading Training Args==========")
 training_args = TrainingArguments(
-    output_dir="/mnt/buffer/wangquansen/"+args.output,
+    output_dir=args.output,
     per_device_train_batch_size=args.bs,
     gradient_accumulation_steps=args.gas,
     logging_steps=1,
@@ -167,17 +169,17 @@ training_args = TrainingArguments(
     gradient_checkpointing=True,
     report_to="none",
 
-    evaluation_strategy=args.ss,
+    eval_strategy=args.ss,
     eval_steps=args.ebs,
     greater_is_better=False, # load model with highest F1 score
     load_best_model_at_end=True, 
     metric_for_best_model ="loss",
     per_device_eval_batch_size=args.bs,
     save_total_limit = 2,
-    run_name = "reflection-training-"+args.model_path+"-"+args.version+"-"+args.task+"-"+args.num_epochs,
+    run_name = "reflection-training-" + args.model_path + "-" + args.task + "-" + args.num_epochs,
    
-    deepspeed="./ds_z3_offload_config.json",
-    logging_dir="./logs",
+    deepspeed="train/config/ds_z3_offload_config.json",
+    logging_dir="logs",
     weight_decay=args.wd,
     bf16=True,
     # resume_from_checkpoint=True,

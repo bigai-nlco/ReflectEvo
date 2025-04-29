@@ -1,4 +1,4 @@
-from core.datasets import Dataset
+from datasets import Dataset
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM, DataCollatorForSeq2Seq, TrainingArguments, Trainer, GenerationConfig, BitsAndBytesConfig
 import torch
@@ -63,7 +63,7 @@ else:
 if args.input_data:
     data_path = args.input_data
 else:
-    data_path = f'data/data_train/{model}_{task}_train.jsonl'
+    data_path = f'data/data_train/D+/{model}_{task}_train.jsonl'
 
 if args.output: 
     path = args.output
@@ -85,7 +85,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 tokenizer.pad_token = tokenizer.eos_token
 tokenized_id = ds.map(process_func, remove_columns=ds.column_names)
 
-eval_df = pd.read_json(f'../data_train/{model}_{task}_eval.jsonl', lines=True)
+eval_df = pd.read_json(f'data/data_train/D+/{model}_{task}_eval.jsonl', lines=True)
 
 eval_df['input'] = eval_df['reflect_prompt']
 
@@ -136,7 +136,7 @@ training_args = TrainingArguments(
     gradient_checkpointing=True,
     report_to="none",
 
-    evaluation_strategy="steps",
+    eval_strategy="steps",
     eval_steps=50,
     greater_is_better=False,
     load_best_model_at_end=True, 

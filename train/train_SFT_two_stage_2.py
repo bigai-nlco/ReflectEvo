@@ -1,4 +1,4 @@
-from core.datasets import Dataset
+from datasets import Dataset
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM, DataCollatorForSeq2Seq, TrainingArguments, Trainer, GenerationConfig, BitsAndBytesConfig, EarlyStoppingCallback, IntervalStrategy
 import torch
@@ -12,12 +12,12 @@ import deepspeed
 from accelerate import infer_auto_device_map
 import torch.nn as nn
 
-project_path = # TODO: Replace here with your project absolute path
+project_path = "/home/lijiaqi/ReflectEvo" # TODO: Replace here with your project absolute path
 os.environ['WANDB_PROJECT'] = 'reflection-training'
 os.environ['WANDB_LOG_MODEL'] = 'checkpoint'
 os.environ['WANDB_WATCH'] = 'all'
 os.environ['WANDB_SILENT'] = 'False'
-os.environ['WANDB_CACHE_DIR'] = # TODO: Replace here with your cache folder, if you prefer to use the default dir, delete this line
+os.environ['WANDB_CACHE_DIR'] = "wandb"# TODO: Replace here with your cache folder, if you prefer to use the default dir, delete this line
 os.environ['TOKENIZERS_PARALLELISM'] = "true"
 attn_implementation = "flash_attention_2"
 torch_dtype = torch.bfloat16
@@ -56,7 +56,8 @@ def parse_args():
     parse.add_argument('--epoch_delta', type=str, help='epoch delta', default="5")
     parse.add_argument('--resume', type=str, help='resume from checkpoint')
     parse.add_argument('--output', type=str, help='output file path')
-    parse.add_argument('--model_path', type=str, help='base model path', default="Meta-Llama-3-8B-Instructs")
+    parse.add_argument('--model_name', type=str, help='base model name', default="Meta-Llama-3-8B-Instruct")
+    parse.add_argument('--model_path', type=str, help='base model path', default="Meta-Llama-3-8B-Instruct")
     parse.add_argument('--template', type=str, help='template', default="1")
     parse.add_argument('--checkpoint_num', type=str, help='checkpoint number', default="100")
     parse.add_argument('--bs', type=int, help='batch size', default=4)
@@ -76,10 +77,10 @@ args = parse_args()
 attn_implementation = "eager" if "gemma" in args.model_path else "flash_attention_2"
 
 print("==========Loading Tokenizer and Models==========")
-model_path = # TODO: Replace your model path here, 
+model_path = args.model_path # TODO: Replace your model path here, 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 tokenizer.pad_token = tokenizer.eos_token
-path = # TODO: Replace here with your path to checkpoints if args.checkpoint_path == "" else args.checkpoint_path
+path = args.model_path # TODO: Replace here with your path to checkpoints if args.checkpoint_path == "" else args.checkpoint_path
 if args.resume == 'True':
     model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16, attn_implementation=attn_implementation)
     num_train = int(args.epoch_delta)
@@ -96,8 +97,8 @@ print("==========Loading Dataset==========")
 
 print(f"Training with task {args.task} at output {args.folder}")
 print("Training with first stage of Reflection")
-# data_path = f'{project_path}/data/{args.folder}/{args.model_path}_{args.task}_train.jsonl'
-data_path = f'{project_path}/data/{args.folder}/{args.model_path}_{args.task}_train.jsonl'
+# data_path = f'data/data_train/D+/{args.model_name}_{args.task}_train.jsonl'
+data_path = f'data/data_train/D+/{args.model_name}_{args.task}_train.jsonl'
 # 逐行读取 JSONL 文件并构建 DataFrame
 df = pd.read_json(data_path, lines=True)  # 这里要改成其他路径
 # 提取需要的字段并重命名为 input 和 output
@@ -110,7 +111,7 @@ ds = Dataset.from_pandas(df[['input', 'output']])
 tokenized_id = ds.map(process_func, remove_columns=ds.column_names)
 
 # breakpoint()
-eval_path = f'{project_path}/data/{args.folder}/{args.model_path}_{args.task}_eval.jsonl'
+eval_path = f'data/data_train/D+/{args.model_name}_{args.task}_eval.jsonl'
 eval_df = pd.read_json(eval_path, lines=True)
 # 提取需要的字段并重命名为 input 和 output
 eval_df['input'] = eval_df['reflect_prompt']
@@ -181,7 +182,7 @@ def preprocess_logits_for_metrics(logits, labels):
 
 print("==========Loading Training Args==========")
 training_args = TrainingArguments(
-    output_dir="/mnt/buffer/wangquansen/"+args.output,
+    output_dir=args.output,
     per_device_train_batch_size=args.bs,
     gradient_accumulation_steps=args.gas,
     logging_steps=1,
@@ -201,8 +202,8 @@ training_args = TrainingArguments(
     save_total_limit = 3,
     run_name = "reflection-training-"+args.output+"-"+args.num_epochs,
     weight_decay=args.wd,
-    deepspeed="./ds_z3_offload_config.json",
-    logging_dir="./logs",
+    deepspeed="train/config/ds_z3_offload_config.json",
+    logging_dir="logs",
     bf16=True,
     # resume_from_checkpoint=True,
     warmup_ratio=args.wr,
