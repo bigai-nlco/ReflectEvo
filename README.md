@@ -49,7 +49,7 @@
    
 ## Reflection Generation
 ### Download ReflectEvo-460K
-You can download our **ReflectEvo-460K** here  ([🤗 HF Repo](https://huggingface.co/datasets/bigai-nlco/ReflectionEvo)). The sample data can also be referenced quickly [data/examples](data/examples).
+You can download the whole set of our **ReflectEvo-460K** here  ([🤗 HF Repo](https://huggingface.co/datasets/bigai-nlco/ReflectionEvo)). The sample data can also be referenced quickly [data/examples](data/examples).
 
 
 ### Generate Reflection
