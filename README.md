@@ -13,10 +13,9 @@
 
 ![Overall Pipeline](assets/overall.png)
 
-• Novel Pipeline for Self-Reflection Generation: We propose ReflectEvo for automatic selfreflection generation and curation, which is the first to explore meta introspection of SLMs.
-• Large-Scale and Diverse Self-generated Reflection Dataset: We curate a comprehensive reflection training set ReflectEvo-460K from multiple data sources and tasks including various reflection instructions and comparative samples.
-• Learning Reflection Via Self-training: We develop four settings of reflection learning methods to effectively improve self-reflection and selfcorrection based on SFT and DPO, which significantly boost the reasoning abilities of SLMs as
-well as surpassing their stronger counterparts.
+🔥 **Novel Pipeline for Self-Reflection Generation** We propose ReflectEvo for automatic self-reflection generation and curation, which is the first to explore meta introspection of SLMs.
+📝 **Large-Scale and Diverse Self-generated Reflection Dataset** We curate a comprehensive reflection training set ReflectEvo-460K from multiple data sources and tasks including various reflection instructions and comparative samples.
+🤔 **Learning Reflection Via Self-training** We develop four settings of reflection learning methods to effectively improve self-reflection and selfcorrection based on SFT and DPO, which significantly boost the reasoning abilities of SLMs as well as surpassing their stronger counterparts.
 
 
 ## 📖 Table of contents
