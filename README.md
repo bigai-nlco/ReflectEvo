@@ -22,14 +22,7 @@
 
 ## 📌Statistics of ReflectEvo-460K
 ![Statistics](assets/statistics.png)
-## Installation
-Clone this repository and navigate to ReflectEvo folder
-   
-   ```
-   git clone https://github.com/Sheng-Shu/ReflectEvo.git
-   cd ReflectEvo
-   pip install -r requirements.txt
-   ```
+
 
 
 ## 📖 Table of contents
@@ -42,7 +35,17 @@ Clone this repository and navigate to ReflectEvo folder
   - [Generate Reflection for Inference](#generate-results)
   - [Performance Evaluation](#evaluate-performance)
 - [Citation](#citation)
+
   
+## Installation
+Clone this repository and navigate to ReflectEvo folder
+   
+   ```bash
+   git clone https://github.com/Sheng-Shu/ReflectEvo.git
+   cd ReflectEvo
+   conda activate reflectevo
+   pip install -r requirements.txt
+   ```
 
    
 ## Reflection Generation
