@@ -28,8 +28,6 @@
 ## 📖 Table of contents
 - [Installation](#installation)
 - [Reflection Generation](#reflection-generation)
-  - [Download ReflectEvo-460K](#download-the-data)
-  - [Generate Reflection for Training](#generate-reflection)
 - [Reflection Learning through Self-training](#training-guide)
 - [Evaluation](#evaluation)
   - [Generate Reflection for Inference](#generate-results)
@@ -48,11 +46,9 @@
 
    
 ## Reflection Generation
-### Download ReflectEvo-460K
+
 You can download the whole set of our **ReflectEvo-460K** here  ([🤗 HF Repo](https://huggingface.co/datasets/bigai-nlco/ReflectionEvo)). The sample data can also be referenced quickly [data/examples](data/examples).
 
-
-### Generate Reflection
 For Reflection Generation, run
 ```bash
 python -m run.run --dataset Logiqa --demand_type 1 --model_name /path/to/model
@@ -69,8 +65,20 @@ Reflection behavior is controlled with `--reflection`. It defaults to 1 (regener
 ## Training Guide
 
 For two stage training with D<sup>+</sup>, we use full-parameter supervised fine-tuning (SFT)(See Appendix B.2). First use
-```
-PYTHONPATH=. torchrun --master-port 5508 --nproc_per_node=1 train/train_SFT_two_stage_1.py --task logiqa --num_epochs 3 --resume False --output /your/output/model/name --model_path /your/model/path ---ebs 20 --bs 8 --ss steps --wd 0.01 --lr 1e-3 --gas 4
+
+```bash
+PYTHONPATH=. torchrun --master-port 5508 --nproc_per_node=1 train/train_SFT_two_stage_1.py \
+    --task logiqa \
+    --num_epochs 3 \
+    --resume False \
+    --output /your/output/model/name \
+    --model_path /your/model/path \
+    ---ebs 20 \
+    --bs 8 \
+    --ss steps \
+    --wd 0.01 \
+    --lr 1e-3 \
+    --gas 4
 ```
 
 then use
