@@ -38,8 +38,7 @@
 
   
 ## Installation
-Clone this repository and navigate to ReflectEvo folder
-   
+
    ```bash
    git clone https://github.com/Sheng-Shu/ReflectEvo.git
    cd ReflectEvo
@@ -49,19 +48,20 @@ Clone this repository and navigate to ReflectEvo folder
 
    
 ## Reflection Generation
-### Download the Data
-You can download the **ReflectEvo-460K** data here: https://disk.pku.edu.cn/link/AADBE037EB31AB48878545A552DE2C9ACC
+### Download ReflectEvo-460K
+You can download our **ReflectEvo-460K** here  ([🤗 HF Repo](https://huggingface.co/datasets/bigai-nlco/ReflectionEvo))
 
-You can also access our sample data here [data/](data/).
+You can also access the sample data [data/examples](data/examples).
+
 
 ### Generate Reflection
 For Reflection Generation, run
-```
+```bash
 python -m run.run --dataset Logiqa --demand_type 1 --model_name /path/to/model
 ```
 Open-source models can be downloaded and loaded from [Models/](Models/) by default, you can change the path via `--model_name`
 
-Datasets can be selected via `--dataset`. Options include LogiQA, MATH, MBPP, Bigbench, and Bigbenchfree (a filtered subset of free-text tasks from BIG-bench).
+Datasets can be specified via `--dataset`. Options include LogiQA, MATH, MBPP, Bigbench, and Bigbenchfree (a filtered subset of free-text tasks from BIG-bench).
 
 Instructions are specified using `--demand_type`, which corresponds to an instruction ID from the instruction pool (see Appendix B.1 for details).
 
