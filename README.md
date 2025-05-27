@@ -20,8 +20,19 @@
 🤔 **Learning Reflection Via Self-training** We develop four settings of reflection learning methods to effectively improve self-reflection and selfcorrection based on SFT and DPO, which significantly boost the reasoning abilities of SLMs as well as surpassing their stronger counterparts.
 
 
+## 📌Statistics of ReflectEvo-460K
+![Statistics](assets/statistics.png)
+## Installation
+Clone this repository and navigate to ReflectEvo folder
+   
+   ```
+   git clone https://github.com/Sheng-Shu/ReflectEvo.git
+   cd ReflectEvo
+   pip install -r requirements.txt
+   ```
+
+
 ## 📖 Table of contents
-- [Statistics of ReflectEvo-460K](#statistics-of-reflectevo-460k)
 - [Installation](#installation)
 - [Reflection Generation](#reflection-generation)
   - [Download the Data](#download-the-data)
@@ -33,16 +44,7 @@
 - [Citation](#citation)
 - [Acknowledgment](#acknowledgment)
   
-## 📌Statistics of ReflectEvo-460K
-![Statistics](assets/statistics.png)
-## Installation
-Clone this repository and navigate to ReflectEvo folder
-   
-   ```
-   git clone https://github.com/Sheng-Shu/ReflectEvo.git
-   cd ReflectEvo
-   pip install -r requirements.txt
-   ```
+
    
 ## Reflection Generation
 ### Download the Data
