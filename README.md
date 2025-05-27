@@ -35,14 +35,13 @@ Clone this repository and navigate to ReflectEvo folder
 ## 📖 Table of contents
 - [Installation](#installation)
 - [Reflection Generation](#reflection-generation)
-  - [Download the Data](#download-the-data)
-  - [Generate Reflection](#generate-reflection)
-- [Training Guide](#training-guide)
+  - [Download ReflectEvo-460K](#download-the-data)
+  - [Generate Reflection for Training](#generate-reflection)
+- [Reflection Learning through Self-training](#training-guide)
 - [Evaluation](#evaluation)
-  - [Generate Results](#generate-results)
-  - [Evaluate Performance](#evaluate-performance)
+  - [Generate Reflection for Inference](#generate-results)
+  - [Performance Evaluation](#evaluate-performance)
 - [Citation](#citation)
-- [Acknowledgment](#acknowledgment)
   
 
    
@@ -138,6 +137,13 @@ python -m eval.count_f1 "path/to/your/results"
 ```
 
 ## Citation
-
-## Acknowledgment
+If you would like to use our data or find our work interesting, please cite:
+```bibtex
+@article{li2025reflectevo,
+  title={ReflectEvo: Improving Meta Introspection of Small LLMs by Learning Self-Reflection},
+  author={Li, Jiaqi and Dong, Xinyi and Liu, Yang and Yang, Zhizhuo and Wang, Quansen and Wang, Xiaobo and Zhu, SongChun and Jia, Zixia and Zheng, Zilong},
+  journal={arXiv preprint arXiv:2505.16475},
+  year={2025}
+}
+```
 
