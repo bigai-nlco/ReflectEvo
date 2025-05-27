@@ -1,5 +1,14 @@
 <h1 align="center">ReflectEvo: Improving Meta Introspection of Small LLMs  by Learning Self-Reflection</h1>
+
+  
 <p align="center">
+    <a href="https://huggingface.co/datasets/bigai-nlco/ReflectionEvo">
+        <img alt="Documentation" src="https://img.shields.io/badge/Dataset-HF Data-yellow.svg">
+    </a>
+    <a href="https://arxiv.org/abs/2505.16475">
+        <img alt="Documentation" src="https://img.shields.io/badge/Paper-arXiv-red.svg">
+    </a>
+</p>
 
 We propose a novel pipeline **ReflectEvo**, to automatically generate self-reflection data and leverage self-training to enhance LLM’s reflection capability. Building on this pipeline, we curate a large scale, diverse, and unsupervised reflection learning dataset **ReflectEvo-460k** containing 460k reflection samples derived from 17 source datasets spanning 10 tasks and domains.
 
