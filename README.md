@@ -10,11 +10,14 @@
     </a>
 </p>
 
-We propose a novel pipeline **ReflectEvo**, to automatically generate self-reflection data and leverage self-training to enhance LLM’s reflection capability. Building on this pipeline, we curate a large scale, diverse, and unsupervised reflection learning dataset **ReflectEvo-460k** containing 460k reflection samples derived from 17 source datasets spanning 10 tasks and domains.
 
 ![Overall Pipeline](assets/overall.png)
 
-*Overview pipeline of ReflectEvo.* There are four key stages: (1) Initial thoughts and answers are collected from 10 tasks and 17 datasets, (2) Reflection Generation for erroneous samples including self-reflection and self-correction, (3) Reflection curation (4) Reflection Tuning to enhance LLMs via self-training.
+• Novel Pipeline for Self-Reflection Generation: We propose ReflectEvo for automatic selfreflection generation and curation, which is the first to explore meta introspection of SLMs.
+• Large-Scale and Diverse Self-generated Reflection Dataset: We curate a comprehensive reflection training set ReflectEvo-460K from multiple data sources and tasks including various reflection instructions and comparative samples.
+• Learning Reflection Via Self-training: We develop four settings of reflection learning methods to effectively improve self-reflection and selfcorrection based on SFT and DPO, which significantly boost the reasoning abilities of SLMs as
+well as surpassing their stronger counterparts.
+
 
 ## 📖 Table of contents
 - [Statistics of ReflectEvo-460K](#statistics-of-reflectevo-460k)
