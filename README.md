@@ -33,6 +33,7 @@
 - [Evaluation](#evaluation)
   - [Generate prediction results](#generate-results)
   - [Performance Evaluation](#evaluate-performance)
+- [Results](#results)
 - [Citation](#citation)
 
   
@@ -143,6 +144,11 @@ For questions with free-text answers, use the following command to evaluate the 
 ```bash
 python -m eval.count_f1 "path/to/your/results"
 ```
+
+## ✅ Results
+
+![result](assets/result.png)
+
 
 ## 📝 Citation
 If you would like to use our data or find our work interesting, please cite:
