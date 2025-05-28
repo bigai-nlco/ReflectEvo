@@ -52,7 +52,7 @@ You can download the whole set of our **ReflectEvo-460K** here  ([🤗 HF Repo](
 
 For Reflection Generation, run
 ```bash
-python -m run.run --dataset Logiqa -model_name /path/to/model --demand_type 1
+python -m run.run --dataset Logiqa -model_name your_model_path --demand_type 1
 ```
 
 Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, and BIG-benchfree (a filtered subset with free-text answers from BIG-bench).
@@ -62,15 +62,15 @@ You can also determine the instructions to generate reflections through `--deman
 
 ## Reflection Learning
 
-For two stage training with D<sup>+</sup>, we use full-parameter supervised fine-tuning (SFT)(See Appendix B.2). First use
+For two stage training with D<sup>+</sup>, first train the capability of self-reflection:
 
 ```bash
 PYTHONPATH=. torchrun --master-port 5508 --nproc_per_node=1 train/train_SFT_two_stage_1.py \
     --task logiqa \
     --num_epochs 3 \
     --resume False \
-    --output /your/output/model/name \
-    --model_path /your/model/path \
+    --output output_path \
+    --model_path your_model_path \
     ---ebs 20 \
     --bs 8 \
     --ss steps \
@@ -79,48 +79,36 @@ PYTHONPATH=. torchrun --master-port 5508 --nproc_per_node=1 train/train_SFT_two_
     --gas 4
 ```
 
-then use
+then train the self-correction:
 ```bash
 PYTHONPATH=. torchrun --master-port 5507 --nproc_per_node=1 train/train_SFT_two_stage_2.py  \
     --task logiqa \
     --num_epochs 5 \
-    --resume False --output /your/output/model/name \
-    --model_path /your/model/path \
+    --resume False \
+    --output output_path \
+    --model_path your_model_path \
     --ss steps \
     --ebs 50  \
     --bs 8 \
     --wd 0.01 \
     --lr 1e-3 \
     --gas 4 \
-    --folder /your/train/data/path
+    --folder training_data_path 
 ```
 
-Use `--task` to specify the dataset.
-
-Use `--model_path` to provide the path to the base model.
-
-Use `--folder` to specify the folder containing the training data.
-
-Use `--output` to save results or logs.
-
-
-For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
+For one stage training with D<sup>+</sup>:
 ```bash
 PYTHONPATH=. python train/train_SFT_one_stage.py \
     --task logiqa \
-    --input_data /path/to/training/data \
-    --output /path/to/output \
-    --model_path /path/to/model
+    --input_data training_data_path \
+    --output output_path \
+    --model_path your_model_path \
 ```
 
-Use `--input_data` to specify the folder containing the training data.
-
-
-For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>(See Appendix B.2), use
+For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>:
 ```bash
 ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py configs/DPO_train_config.yaml
 ```
-Use DeepSpeed Zero3 to accelerate and run run_dpo.py. The num_processes parameter represents the number of GPUs, and DPO_train_config.yaml contains the training configuration.
 
 ## Evaluation
 ### Generate prediction results
