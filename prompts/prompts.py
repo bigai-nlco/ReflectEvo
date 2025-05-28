@@ -60,285 +60,100 @@ Please follow the instructions without any additional introductory or concluding
 
 
 DEMAND_TYPES = {
-"1": 
-'''1.Identify the potential reasons for the incorrect solution.
-2.Propose specific strategies or corrections to address these issues.
-3.Outline a high-level plan explaining how these changes will mitigate similar issues. ''',
-
-"2": 
-'''1.Identify the potential reasons for the incorrect solution.
-2.Propose specific strategies or corrections to address these issues.
-3.Outline a detailed plan explaining how these changes will mitigate similar issues in the future.''',
-
-"3": 
-'''1.Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2.Diagnose potential reasons for the incorrect solution.
-3.Propose specific strategies or corrections to address these issues.''',
-
-"4": 
-'''1.Verify the failed solution to identify potential reasons for its incorrectness.
-2.Propose specific strategies or corrections to address these issues.''',
-
-"1+5":
-'''1.Review the requirements to confirm that the response aligns with them.
-2.Identify the potential reasons for the incorrect solution.
-3.Propose specific strategies or corrections to address these issues.
-4.Outline a high-level plan explaining how these changes will mitigate similar issues.
-''',
-
-"1+6": 
-'''1. Cite factual sources that support your solution.
-2. Verify that your solution does not contain incorrect or outdated information.
-3.Identify the potential reasons for the incorrect solution.
-4.Propose specific strategies or corrections to address these issues.
-5.Outline a high-level plan explaining how these changes will mitigate similar issues.''',
-
-"1+7": 
-'''1.Review your solution to ensure it conforms to the required format and guidelines.
-2.Identify the potential reasons for the incorrect solution.
-3.Propose specific strategies or corrections to address these issues.
-4.Outline a high-level plan explaining how these changes will mitigate similar issues.''',
-
-"1+8":
-'''1.Review your solution to ensure it maintains logical coherence.
-2.Identify the potential reasons for the incorrect solution.
-3.Propose specific strategies or corrections to address these issues.
-4.Outline a high-level plan explaining how these changes will mitigate similar issues.''',
-
-"1+9": 
-'''1.Review your solution to ensure that it is relevant to the question and presented with clarity, sufficient detail, and a well-organized structure.
-2.Identify the potential reasons for the incorrect solution.
-3.Propose specific strategies or corrections to address these issues.
-4.Outline a high-level plan explaining how these changes will mitigate similar issues.''',
-
-"1+10": 
-'''1.Review your response to ensure it comprehensively addresses each aspect of the question.
-2.Identify the potential reasons for the incorrect solution.
-3.Propose specific strategies or corrections to address these issues.
-4.Outline a high-level plan explaining how these changes will mitigate similar issues.''',
-
-"1+11": 
-'''1. Review your calculation process to ensure that each step is accurate.
-2.Identify the potential reasons for the incorrect solution.
-3.Propose specific strategies or corrections to address these issues.
-4.Outline a high-level plan explaining how these changes will mitigate similar issues.''',
-
-"2+5":
-'''1. Identify the potential reasons for the incorrect solution.
-2. Propose specific strategies or corrections to address these issues.
-3. Outline a detailed plan explaining how these changes will mitigate similar issues in the future.
-4. Review the requirements to confirm that the response aligns with them.
-''',
-
-"2+6":
-'''
-1. Identify the potential reasons for the incorrect solution.
-2. Propose specific strategies or corrections to address these issues.
-3. Outline a detailed plan explaining how these changes will mitigate similar issues in the future.
-4. Cite factual sources that support your solution.
-5. Verify that your solution does not contain incorrect or outdated information.
-''',
-
-"2+7":
-'''1. Identify the potential reasons for the incorrect solution.
-2. Propose specific strategies or corrections to address these issues.
-3. Outline a detailed plan explaining how these changes will mitigate similar issues in the future.
-4. Review your solution to ensure it conforms to the required format and guidelines.
-''',
-
-"2+8":
-'''
-1. Identify the potential reasons for the incorrect solution.
-2. Propose specific strategies or corrections to address these issues.
-3. Outline a detailed plan explaining how these changes will mitigate similar issues in the future.
-4. Review your solution to ensure it maintains logical coherence.
-''',
-
-"2+9":
-'''
-1. Identify the potential reasons for the incorrect solution.
-2. Propose specific strategies or corrections to address these issues.
-3. Outline a detailed plan explaining how these changes will mitigate similar issues in the future.
-4. Review your solution to ensure that it is relevant to the question and presented with clarity, sufficient detail, and a well-organized structure.
-''',
-
-"2+10":
-'''
-1. Identify the potential reasons for the incorrect solution.
-2. Propose specific strategies or corrections to address these issues.
-3. Outline a detailed plan explaining how these changes will mitigate similar issues in the future.
-4. Review your response to ensure it comprehensively addresses each aspect of the question.
-''',
-
-"2+11":
-'''
-1. Identify the potential reasons for the incorrect solution.
-2. Propose specific strategies or corrections to address these issues.
-3. Outline a detailed plan explaining how these changes will mitigate similar issues in the future.
-4. Review your calculation process to ensure that each step is accurate.
-''',
-
-"3+5":
-'''1. Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2. Diagnose potential reasons for the incorrect solution.
-3. Propose specific strategies or corrections to address these issues.
-4. Review the requirements to confirm that the response aligns with them.
-''',
-
-"3+6":
-'''1. Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2. Diagnose potential reasons for the incorrect solution.
-3. Propose specific strategies or corrections to address these issues.
-4. Cite factual sources that support your analysis and proposed solutions.
-5. Verify that your analysis does not contain incorrect or outdated information.
-''',
-
-"3+7":
-'''1. Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2. Diagnose potential reasons for the incorrect solution.
-3. Propose specific strategies or corrections to address these issues.
-4. Review your analysis to ensure it conforms to the required format and guidelines.
-''',
-
-"3+8":
-'''1. Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2. Diagnose potential reasons for the incorrect solution.
-3. Propose specific strategies or corrections to address these issues.
-4. Review your analysis to ensure it maintains logical coherence.
-''',
-
-"3+9":
-'''1. Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2. Diagnose potential reasons for the incorrect solution.
-3. Propose specific strategies or corrections to address these issues.
-4. Review your analysis to ensure that it is relevant to the question and presented with clarity, sufficient detail, and a well-organized structure.
-''',
-
-"3+10":
-'''1. Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2. Diagnose potential reasons for the incorrect solution.
-3. Propose specific strategies or corrections to address these issues.
-4. Review your response to ensure it comprehensively addresses each aspect of the analysis.
-''',
-
-"3+11":
-'''1. Analyze the solution by tracing through its execution and identifying specific steps where errors occur.
-2. Diagnose potential reasons for the incorrect solution.
-3. Propose specific strategies or corrections to address these issues.
-4. Review your calculation process within the solution to ensure that each step is accurate.
-''',
-
-"4+5":
-'''1. Verify the failed solution to identify potential reasons for its incorrectness.
-2. Propose specific strategies or corrections to address these issues.
-3. Review the requirements to confirm that the response aligns with them.
-''',
-
-"4+6":
-'''1. Verify the failed solution to identify potential reasons for its incorrectness.
-2. Propose specific strategies or corrections to address these issues.
-3. Cite factual sources that support your verification and proposed solutions.
-4. Verify that your verification does not contain incorrect or outdated information.
-''',
-
-"4+7":
-'''1. Verify the failed solution to identify potential reasons for its incorrectness.
-2. Propose specific strategies or corrections to address these issues.
-3. Review your verification to ensure it conforms to the required format and guidelines.
-''',
-
-"4+8":
-'''1. Verify the failed solution to identify potential reasons for its incorrectness.
-2. Propose specific strategies or corrections to address these issues.
-3. Review your verification to ensure it maintains logical coherence.
-''',
-
-"4+9":
-'''1. Verify the failed solution to identify potential reasons for its incorrectness.
-2. Propose specific strategies or corrections to address these issues.
-3. Review your verification to ensure that it is relevant to the question and presented with clarity, sufficient detail, and a well-organized structure.
-''',
-
-"4+10":
-'''1. Verify the failed solution to identify potential reasons for its incorrectness.
-2. Propose specific strategies or corrections to address these issues.
-3. Review your response to ensure it comprehensively addresses each aspect of the verification.
-''',
-
-"4+11":
-'''1. Verify the failed solution to identify potential reasons for its incorrectness.
-2. Propose specific strategies or corrections to address these issues.
-3. Review your calculation process within the verification to ensure that each step is accurate.
-''',
-}
-
-
-INT_TO_DEMAND_TYPES = {
-1: "1",#high-level plan
-2: "2",#detailed plan
-3: "3",#trace through the execution
-4: "4",#without step by step
-5: "1+5",#1+check requirements
-6: "1+6",#1+list reference
-7: "1+7",#1_phrasing discrepancy
-8: "1+8",#1+logic errors
-9: "1+9",#1+irrelevent answers
-10: "1+10",#1+coverage
-11: "1+11",#1+mathematical calculations
-12: "2+5",
-13: "2+6",
-14: "2+7",
-15: "2+8",
-16: "2+9",
-17: "2+10",
-18: "2+11",
-19: "3+5",
-20: "3+6",
-21: "3+7",
-22: "3+8",
-23: "3+9",
-24: "3+10",
-25: "3+11",
-26: "4+5",
-27: "4+6",
-28: "4+7",
-29: "4+8",
-30: "4+9",
-31: "4+10",
-32: "4+11",
-}
-
-DEMAND_TYPES_TO_INT = {
-"1": 1,
-"2": 2,
-"3": 3,
-"4": 4,
-"1+5": 5,
-"1+6": 6,
-"1+7": 7,
-"1+8": 8,
-"1+9": 9,
-"1+10": 10,
-"1+11": 11,
-"2+5": 12,
-"2+6": 13,
-"2+7": 14,
-"2+8": 15,
-"2+9": 16,
-"2+10": 17,
-"2+11": 18,
-"3+5": 19,
-"3+6": 20,
-"3+7": 21,
-"3+8": 22,
-"3+9": 23,
-"3+10": 24,
-"3+11": 25,
-"4+5": 26,
-"4+6": 27,
-"4+7": 28,
-"4+8": 29,
-"4+9": 30,
-"4+10": 31,
-"4+11": 32,
+"1-1-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your calculation process to ensure that all the operations are accurate.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-1-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your calculation process to ensure that all the operations are accurate.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"1-2-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your algorithm logic to ensure all steps follow the correct order.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-2-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your algorithm logic to ensure all steps follow the correct order.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"1-3-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure it maintains logical coherence.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-3-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure it maintains logical coherence.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"1-4-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to check statements and conclusions for internal consistency.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-4-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to check statements and conclusions for internal consistency.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"1-5-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review the context and requirements presented in the question to confirm that the response aligns with them.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-5-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review the context and requirements presented in the question to confirm that the response aligns with them.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"1-6-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure that it is relevant to the question and addresses each aspect of the question.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-6-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure that it is relevant to the question and addresses each aspect of the question.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"1-7-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure it conforms to the required format and guidelines in a well-organized structure.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-7-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure it conforms to the required format and guidelines in a well-organized structure.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"1-8-1": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure all provided facts are accurate and up to date.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"1-8-2": '''Analyze the failed solution by tracing and examining its execution with step-by-step verification.
+Review your solution to ensure all provided facts are accurate and up to date.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-1-1": '''Quickly go through the failed solution without step-by-step verification.
+Review your calculation process to ensure that all the operations are accurate.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-1-2": '''Quickly go through the failed solution without step-by-step verification.
+Review your calculation process to ensure that all the operations are accurate.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-2-1": '''Quickly go through the failed solution without step-by-step verification.
+Review your algorithm logic to ensure all steps follow the correct order.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-2-2": '''Quickly go through the failed solution without step-by-step verification.
+Review your algorithm logic to ensure all steps follow the correct order.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-3-1": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure it maintains logical coherence.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-3-2": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure it maintains logical coherence.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-4-1": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to check statements and conclusions for internal consistency.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-4-2": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to check statements and conclusions for internal consistency.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-5-1": '''Quickly go through the failed solution without step-by-step verification.
+Review the context and requirements presented in the question to confirm that the response aligns with them.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-5-2": '''Quickly go through the failed solution without step-by-step verification.
+Review the context and requirements presented in the question to confirm that the response aligns with them.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-6-1": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure that it is relevant to the question and addresses each aspect of the question.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-6-2": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure that it is relevant to the question and addresses each aspect of the question.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-7-1": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure it conforms to the required format and guidelines in a well-organized structure.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-7-2": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure it conforms to the required format and guidelines in a well-organized structure.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
+"2-8-1": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure all provided facts are accurate and up to date.
+Outline a high-level plan explaining how these changes will mitigate similar issues.''',
+"2-8-2": '''Quickly go through the failed solution without step-by-step verification.
+Review your solution to ensure all provided facts are accurate and up to date.
+Outline a low-level plan proposing specific strategies or corrections to address these issues.''',
 }
