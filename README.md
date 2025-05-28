@@ -13,9 +13,9 @@
 
 ![Overall Pipeline](assets/overall.png)
 
-🔥 **Novel Pipeline for Self-Reflection Generation** : automatic self-reflection generation and curation, which is the first to explore *meta introspection* of SLMs.
+**Novel Pipeline for Self-Reflection Generation** : automatic self-reflection generation and curation, which is the first to explore *meta introspection* of SLMs.
 
-📝 **Large-Scale and Diverse Self-generated Reflection Dataset** : a comprehensive reflection training set *ReflectEvo-460K* from 17 source datasets spanning 10 tasks including various reflection instructions and comparative samples.
+**Large-Scale and Diverse Self-generated Reflection Dataset** : a comprehensive reflection training set *ReflectEvo-460K* from 17 source datasets spanning 10 tasks including various reflection instructions and comparative samples.
 
 🤔 **Learning Reflection Via Self-training**: four settings of reflection learning through self-reflection and self-correction based on SFT and DPO, which significantly boost the reasoning abilities of SLMs
 
@@ -36,7 +36,7 @@
 - [Citation](#citation)
 
   
-## Installation
+## 💁 Installation
 
    ```bash
    git clone https://github.com/Sheng-Shu/ReflectEvo.git
@@ -46,7 +46,7 @@
    ```
 
    
-## Reflection Generation
+## 🤔 Reflection Generation
 
 You can download the whole set of our **ReflectEvo-460K** here  ([🤗 HF Repo](https://huggingface.co/datasets/bigai-nlco/ReflectionEvo)). The sample data can also be referenced quickly [data/examples](data/examples).
 
@@ -60,7 +60,7 @@ Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, 
 You can also determine the instructions to generate reflections through `--demand_type`.  Types of various instructions from the instruction pool can be seen in Appendix C.1 in the paper for details. You are also encouraged to add your own reflection instruction here.
 
 
-## Reflection Learning
+## 🚀 Reflection Learning
 
 For two stage training with D<sup>+</sup>, first train the capability of self-reflection:
 
@@ -110,7 +110,7 @@ For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<
 ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py configs/DPO_train_config.yaml
 ```
 
-## Evaluation
+## 📊 Evaluation
 ### Generate prediction results
 
 For evaluation, use the following command to test the performance of the model for both SFT one stage training and DPO training:
@@ -144,7 +144,7 @@ For questions with free-text answers, use the following command to evaluate the 
 python -m eval.count_f1 "path/to/your/results"
 ```
 
-## Citation
+## 📝 Citation
 If you would like to use our data or find our work interesting, please cite:
 ```bibtex
 @article{li2025reflectevo,
