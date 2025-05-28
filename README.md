@@ -52,15 +52,12 @@ You can download the whole set of our **ReflectEvo-460K** here  ([🤗 HF Repo](
 
 For Reflection Generation, run
 ```bash
-python -m run.run --dataset Logiqa --demand_type 1 --model_name /path/to/model
+python -m run.run --dataset Logiqa -model_name /path/to/model --demand_type 1
 ```
-Open-source models can be downloaded and loaded from [Models/](Models/) by default, you can change the path via `--model_name`
 
-Datasets can be specified via `--dataset`. Options include LogiQA, MATH, MBPP, Bigbench, and Bigbenchfree (a filtered subset of free-text tasks from BIG-bench).
+Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, and BIG-benchfree (a filtered subset with free-text answers from BIG-bench).
 
-Instructions are specified using `--demand_type`, which corresponds to an instruction ID from the instruction pool (see Appendix B.1 for details).
-
-Reflection behavior is controlled with `--reflection`. It defaults to 1 (regenerate). You can also use 2 (load stored reflection) or 3 (skip reflection).
+You can also determine the instructions to generate reflections through `--demand_type`.  Types of various instructions from the instruction pool can be seen in Appendix C.1 in the paper for details. You are also encouraged to add your own reflection instruction here.
 
 
 ## Training Guide
