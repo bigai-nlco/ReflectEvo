@@ -125,7 +125,7 @@ For two-stage training on D<sup>+</sup>:
 python -m run.run_PEFT --dataset Logiqa --is_test True  --model_name your_model_path --model_config model_config
 ```
 
-`--is_test` is set to "True" for evaluation.
+`--is_test` is set to "True" for evaluation. `--model_config` is used to specify the two models used for reasoning and reflection after reflection learning.
 
 ### Performance Evaluation
 
