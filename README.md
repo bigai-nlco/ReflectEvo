@@ -23,6 +23,7 @@
 ## 📌Statistics of ReflectEvo-460K
 ![Statistics](assets/statistics.png)
 
+![Statistics](assets/pies.png)
 
 
 ## 📖 Table of contents
