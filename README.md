@@ -114,12 +114,12 @@ ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero
 ## 📊 Evaluation
 ### Generate prediction results
 The prediction during inference includes the first trial reasoning, reflection and the second trial reasoning with corrected answer. 
-Generate the predictions for one-stage training on D<sup>+</sup> and DPO training on D<sup>±</sup> and D<sup>pref</sup>:
+Generate the predictions for two-stage training on D<sup>+</sup> and DPO training on D<sup>±</sup> and D<sup>pref</sup>:
 
 ```bash
 python -m run.run --dataset Logiqa --is_test True  --model_name your_model_path --model_config model_config
 ```
-For two-stage training on D<sup>+</sup>:
+For one-stage training on D<sup>+</sup>:
 
 ```bash
 python -m run.run_PEFT --dataset Logiqa --is_test True  --model_name your_model_path --model_config model_config
