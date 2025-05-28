@@ -17,7 +17,7 @@
 
 **Large-Scale and Diverse Self-generated Reflection Dataset** : a comprehensive reflection training set *ReflectEvo-460K* from 17 source datasets spanning 10 tasks including various reflection instructions and comparative samples.
 
-🤔 **Learning Reflection Via Self-training**: four settings of reflection learning through self-reflection and self-correction based on SFT and DPO, which significantly boost the reasoning abilities of SLMs
+**Learning Reflection Via Self-training**: four settings of reflection learning through self-reflection and self-correction based on SFT and DPO, which significantly boost the reasoning abilities of SLMs
 
 
 ## 📌Statistics of ReflectEvo-460K
@@ -114,35 +114,31 @@ ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero
 ## 📊 Evaluation
 ### Generate prediction results
 
-For evaluation, use the following command to test the performance of the model for both SFT one stage training and DPO training:
+Generate the predictions for one-stage training on D<sup>+</sup> and DPO training on D<sup>±</sup> and D<sup>pref</sup>:
 
 ```bash
-python -m run.run --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python -m run.run --dataset Logiqa --is_test True  --model_name your_model_path --model_config model_config
 ```
-
-
-Use the following command to test the performance of the model for SFT two stage training:
+For two-stage training on D<sup>+</sup>:
 
 ```bash
-python -m run.run_PEFT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
+python -m run.run_PEFT --dataset Logiqa --is_test True  --model_name your_model_path --model_config model_config
 ```
 
-Set `--is_test` to "True" for evaluation.
-
-Use `--model_config` to specify the path to a YAML file containing the model configuration.
+`--is_test` is set to "True" for evaluation.
 
 ### Performance Evaluation
 
-For datasets with multiple-answer questions, use the following command to evaluate the model's performance:
+Automatic evaluation on most tasks:
 
 ```bash
-python -m eval.count "path/to/your/results"
+python -m eval.count "path_to_prediction_results"
 ```
 
-For questions with free-text answers, use the following command to evaluate the model's performance:
+Automatic evaluation on questions with free-text answers in BIG-bench:
 
 ```bash
-python -m eval.count_f1 "path/to/your/results"
+python -m eval.count_f1 "path_to_prediction_results"
 ```
 
 ## ✅ Results
