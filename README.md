@@ -31,7 +31,7 @@
 - [Reflection Generation](#reflection-generation)
 - [Reflection Learning through Self-training](#training-guide)
 - [Evaluation](#evaluation)
-  - [Generate Reflection for Inference](#generate-results)
+  - [Generate prediction results](#generate-results)
   - [Performance Evaluation](#evaluate-performance)
 - [Citation](#citation)
 
@@ -60,7 +60,7 @@ Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, 
 You can also determine the instructions to generate reflections through `--demand_type`.  Types of various instructions from the instruction pool can be seen in Appendix C.1 in the paper for details. You are also encouraged to add your own reflection instruction here.
 
 
-## Training Guide
+## Reflection Learning
 
 For two stage training with D<sup>+</sup>, we use full-parameter supervised fine-tuning (SFT)(See Appendix B.2). First use
 
@@ -80,8 +80,19 @@ PYTHONPATH=. torchrun --master-port 5508 --nproc_per_node=1 train/train_SFT_two_
 ```
 
 then use
-```
-PYTHONPATH=. torchrun --master-port 5507 --nproc_per_node=1 train/train_SFT_two_stage_2.py --task logiqa --num_epochs 5 --resume False --output /your/output/model/name --model_path /your/model/path --ss steps --ebs 50 --bs 8 --wd 0.01 --lr 1e-3 --gas 4 --folder /your/train/data/path
+```bash
+PYTHONPATH=. torchrun --master-port 5507 --nproc_per_node=1 train/train_SFT_two_stage_2.py  \
+    --task logiqa \
+    --num_epochs 5 \
+    --resume False --output /your/output/model/name \
+    --model_path /your/model/path \
+    --ss steps \
+    --ebs 50  \
+    --bs 8 \
+    --wd 0.01 \
+    --lr 1e-3 \
+    --gas 4 \
+    --folder /your/train/data/path
 ```
 
 Use `--task` to specify the dataset.
@@ -94,52 +105,54 @@ Use `--output` to save results or logs.
 
 
 For one stage training with D<sup>+</sup>, we use Low-Rank Adaptation (LoRA)-based Parameter-Efficient Fine-Tuning (PEFT)(See Appendix B.2). Use
-```
-PYTHONPATH=. python train/train_SFT_one_stage.py --task logiqa --input_data /path/to/training/data --output /path/to/output --model_path /path/to/model
+```bash
+PYTHONPATH=. python train/train_SFT_one_stage.py \
+    --task logiqa \
+    --input_data /path/to/training/data \
+    --output /path/to/output \
+    --model_path /path/to/model
 ```
 
 Use `--input_data` to specify the folder containing the training data.
 
 
 For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>(See Appendix B.2), use
-```
+```bash
 ACCELERATE_LOG_LEVEL=info accelerate launch --config_file configs/deepspeed_zero3.yaml --num_processes=4 run_dpo.py configs/DPO_train_config.yaml
 ```
 Use DeepSpeed Zero3 to accelerate and run run_dpo.py. The num_processes parameter represents the number of GPUs, and DPO_train_config.yaml contains the training configuration.
 
 ## Evaluation
-### Generate Results
+### Generate prediction results
 
 For evaluation, use the following command to test the performance of the model for both SFT one stage training and DPO training:
 
-```
+```bash
 python -m run.run --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
 
 
 Use the following command to test the performance of the model for SFT two stage training:
 
-```
+```bash
 python -m run.run_PEFT --dataset Logiqa --is_test True  --model_name /path/to/model --model_config /path/to/model/config
 ```
-
-#### Arguments
 
 Set `--is_test` to "True" for evaluation.
 
 Use `--model_config` to specify the path to a YAML file containing the model configuration.
 
-### Evaluate Performance
+### Performance Evaluation
 
 For datasets with multiple-answer questions, use the following command to evaluate the model's performance:
 
-```
+```bash
 python -m eval.count "path/to/your/results"
 ```
 
 For questions with free-text answers, use the following command to evaluate the model's performance:
 
-```
+```bash
 python -m eval.count_f1 "path/to/your/results"
 ```
 
