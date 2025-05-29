@@ -53,7 +53,7 @@ You can download the whole set of our **ReflectEvo-460K** here  ([🤗 HF Repo](
 
 For Reflection Generation, run
 ```bash
-python -m run.run --dataset Logiqa -model_name your_model_path --demand_type 1
+python -m run.run --dataset Logiqa -model_name your_model_path --demand_type reflection_instruction_type
 ```
 
 Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, and BIG-benchfree (a filtered subset with free-text answers from BIG-bench).
