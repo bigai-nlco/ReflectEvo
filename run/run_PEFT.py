@@ -14,9 +14,7 @@ from prompts.prompts import (
     REFLECTION_PROMPT,
     REFLECTION_PROMPT_TEST,
     REFLECTION_PROMPT_TEST_C2,
-    DEMAND_TYPES,
-    INT_TO_DEMAND_TYPES,
-    DEMAND_TYPES_TO_INT
+    DEMAND_TYPES
 )
 from prompts.fewshots import (
     HOTPOTQA_FEWSHOTS,
@@ -54,7 +52,7 @@ parser.add_argument("--dataset", "-d", type=str, help="LogiQA, MATH or MBPP")
 parser.add_argument("--existing_dataset", "-ed", type=str, help="Regenerate it with the data generated earlier. Fill in the file path here")
 parser.add_argument("--use_first_answer", "-u", type=str, help="Whether to keep the first answer in existing dataset", default="true")
 parser.add_argument("--num_of_data", "-n", type=int, help="number of data, 0 for all data", default=0)
-parser.add_argument("--demand_type", "-dt", type=int, help="The type of demand for the reflection task. Choose from 1 to 11.", default=1)
+parser.add_argument("--demand_type", "-dt", type=str, help="The type of demand for the reflection task. Choose from 1 to 11.", default=1)
 parser.add_argument("--output_file", "-o", type=str, help="output directory", required=False)
 parser.add_argument("--model_name", "-mn", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
 parser.add_argument("--reflection", "-r", type=str, help="Whether to use refl", default="True")
@@ -136,10 +134,13 @@ match DATASET:
 
 demand_str = ""
 demand_type = args.demand_type
-if demand_type>0 and demand_type<=32:
-    demand_str = DEMAND_TYPES[INT_TO_DEMAND_TYPES[args.demand_type]]
+print(f"demand_type: {demand_type}")
+
+if demand_type in DEMAND_TYPES:
+    demand_str = DEMAND_TYPES[demand_type]
 else:
-    print("Invalid demand type.")
+    print(f"Invalid demand type: {demand_type}. Please provide a valid key from DEMAND_TYPES.")
+    exit(1)
 
 log = ""
 agents = []
@@ -292,6 +293,8 @@ def process_row(row):
             "trail": 1,
             "reasoning_source": reason_llm.model_id,
             "reflection_source": reflect_llm.model_id,
+            "reason_prompt": reason_prompt,
+            "reflection_prompt": ""
         }
     )
     s_t=time.time()
@@ -323,6 +326,8 @@ def process_row(row):
                     "trail": 2,
                     "reasoning_source": reason_llm.model_id,
                     "reflection_source": reflect_llm.model_id,
+                    "reason_prompt": reason_prompt,
+                    "reflection_prompt": agent.reflect_prompt
                 }
             )
 

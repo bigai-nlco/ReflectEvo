@@ -44,6 +44,9 @@ from trl import DPOTrainer
 
 logger = logging.getLogger(__name__)
 
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import datasets
 
 def main():
     parser = H4ArgumentParser((ModelArguments, DataArguments, DPOConfig))
@@ -79,16 +82,50 @@ def main():
     ###############
     # Load datasets
     ###############
+    
+    data_path = data_args.data_path
+    df = pd.read_json(data_path, lines=True)
+
+    # 创建用于训练和测试的数据格式
+    formatted_data = []
+    for index, row in df.iterrows():
+        formatted_data.append({
+            "prompt": row["reason_prompt"],  # 填充 prompt
+            "chosen": [
+                {"content": row["reflection_prompt"], "role": "user"},
+                {"content": row["second_trial_reflection_chosen"], "role": "assistant"}
+            ],
+            "rejected": [
+                {"content": row["reflection_prompt"], "role": "user"},
+                {"content": row["second_trial_reflection_rejected"], "role": "assistant"}
+            ]
+        })
+    
+    dataset = datasets.Dataset.from_pandas(pd.DataFrame(formatted_data))
+
+    # 按照 9:1 的比例拆分数据集为训练集和测试集
+    train_dataset, test_dataset = train_test_split(dataset, test_size=0.1, random_state=42)
+
+    # 将数据集转换为 Parquet 格式并保存
+    train_dataset = datasets.Dataset.from_pandas(train_dataset)
+    test_dataset = datasets.Dataset.from_pandas(test_dataset)
+
+    train_dataset.to_parquet("train_dataset.parquet")
+    test_dataset.to_parquet("test_dataset.parquet")
+
+    # 过滤掉没有 `prompt` 的条目
+    raw_datasets['train'] = train_dataset.filter(lambda x: x['prompt'] is not None)
+    raw_datasets['test'] = test_dataset.filter(lambda x: x['prompt'] is not None)
+
+    
+    '''
     raw_datasets = get_datasets(
         data_args,
         splits=data_args.dataset_splits,
         configs=data_args.dataset_configs,
         columns_to_keep=["messages", "chosen", "rejected", "prompt", "completion", "label"],
     )
-
-    raw_datasets['train'] = raw_datasets['train'].filter(lambda x: x['prompt'] is not None)
-    raw_datasets['test'] = raw_datasets['test'].filter(lambda x: x['prompt'] is not None)
-
+    '''
     logger.info(
         f"Training on the following splits: {[split + ' : ' + str(dset.num_rows) for split, dset in raw_datasets.items()]}"
     )

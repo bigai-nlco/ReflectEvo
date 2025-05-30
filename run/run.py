@@ -13,9 +13,7 @@ from prompts.prompts import (
     BIGBENCH_FREE_FORMAT,
     REFLECTION_PROMPT,
     REFLECTION_PROMPT_TEST,
-    DEMAND_TYPES,
-    INT_TO_DEMAND_TYPES,
-    DEMAND_TYPES_TO_INT
+    DEMAND_TYPES
 )
 from prompts.fewshots import (
     HOTPOTQA_FEWSHOTS,
@@ -55,7 +53,7 @@ parser.add_argument("--existing_dataset", "-ed", type=str, help="Regenerate it w
 parser.add_argument("--use_first_answer", "-u", type=str, help="Whether to keep the first answer in existing dataset", default="true")
 parser.add_argument("--use_second_answer", "-us", type=str, help="Whether to keep the second answer in existing dataset", default="false")
 parser.add_argument("--num_of_data", "-n", type=int, help="number of data, 0 for all data", default=0)
-parser.add_argument("--demand_type", "-dt", type=int, help="The type of demand for the reflection task. Choose from 1 to 32.", default=1)
+parser.add_argument("--demand_type", "-dt", type=str, help="The type of demand for the reflection task. Choose from 1 to 32.", default=1)
 parser.add_argument("--output_file", "-o", type=str, help="output directory", required=False)
 parser.add_argument("--model_name", "-mn", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
 parser.add_argument("--reflection", "-r", type=str, help="HOW to use refl,1:regenerate reflection，2:use pre-stored reflection from existing dataset，3: Skip reflection generation", default="1")
@@ -133,16 +131,18 @@ if DATASET == "bigbenchfree":
 else:
     is_free_text = False
 demand_str = ""
-demand_type = args.demand_type
-print(f"demand_type: {demand_type}")
-if demand_type>0 and demand_type<=32:
-    demand_str = DEMAND_TYPES[INT_TO_DEMAND_TYPES[args.demand_type]]
+demand_key = args.demand_type
+print(f"demand_key: {demand_key}")
+
+if demand_key in DEMAND_TYPES:
+    demand_str = DEMAND_TYPES[demand_key]
 else:
-    print("Invalid demand type.")
+    print(f"Invalid demand type: {demand_key}. Please provide a valid key from DEMAND_TYPES.")
+    exit(1)
 
 log = ""
 agents = []
-SAMPLE_SIZE = 2
+SAMPLE_SIZE = 2 # specify the number of reflections to generate for each answer
 
 model_name = args.model_name
 
@@ -304,12 +304,14 @@ def process_row(row):
             "trail": 1,
             "reasoning_source": reason_llm.model_id,
             "reflection_source": reflect_llm.model_id,
+            "reason_prompt": reason_prompt,
+            "reflection_prompt": ""
         }
     )
     s_t=time.time()
     if is_correct:
         print(f"Answer t=1: {agent.generated_answer}")
-    elif args.reflection=="1":
+    elif args.reflection == "1":
         reflections = agent.prompt_reflection(sample_size=SAMPLE_SIZE)
         s_t=time.time()
         if not isinstance(reflections, list):
@@ -338,6 +340,8 @@ def process_row(row):
                     "trail": 2,
                     "reasoning_source": reason_llm.model_id,
                     "reflection_source": reflect_llm.model_id,
+                    "reason_prompt": reason_prompt,
+                    "reflection_prompt": agent.reflect_prompt
                 }
             )
     elif args.reflection == "2":
@@ -379,6 +383,8 @@ def process_row(row):
                     "trail": 2,
                     "reasoning_source": reason_llm.model_id,
                     "reflection_source": "pre-stored",
+                    "reason_prompt": reason_prompt,
+                    "reflection_prompt": ""
                 }
             )
     elif args.reflection == "3":
@@ -406,6 +412,8 @@ def process_row(row):
                 "trail": 2,
                 "reasoning_source": reason_llm.model_id,
                 "reflection_source": "none",
+                "reason_prompt": reason_prompt,
+                "reflection_prompt": ""
             }
         )
     data["output"] = output
