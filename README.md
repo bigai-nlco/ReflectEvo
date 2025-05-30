@@ -56,9 +56,12 @@ For Reflection Generation, run
 python -m run.run --dataset Logiqa -model_name your_model_path --demand_type reflection_instruction_type
 ```
 
+The format of the generated sample data can be found in [data/examples/example_Reflection_raw.jsonl](data/examples/example_Reflection_raw.jsonl).
+
 Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, and BIG-benchfree (a filtered subset with free-text answers from BIG-bench).
 
 You can also determine the instructions to generate reflections through `--demand_type`.  Types of various instructions from the instruction pool can be seen in Appendix C.1 in the paper for details. You are also encouraged to add your own reflection instruction here.
+
 
 
 ## 🚀 Reflection Learning
