@@ -74,7 +74,7 @@ To convert the generated data into training-ready D<sup>+</sup> formats, the fol
   "first_trial_answer": "", // Use the 'generated_answer' field from 'trial 1'
   "second_trial_reasoning": "", // Use the 'reasoning' field from 'trial 2'
   "second_trial_answer": "", // Use the 'generated_answer' field from 'trial 2'
-  "reflections": "", // Use the 'reflection' field from 'trial 2'
+  "reflections": "", // Use the 'reflections' field from 'trial 2'
   "reason_prompt": [ // Use the 'reasoning_prompt' field from 'trial 1'
     "",
     ""
