@@ -62,22 +62,42 @@ Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, 
 
 You can also determine the instructions to generate reflections through `--demand_type`.  Types of various instructions from the instruction pool can be seen in Appendix C.1 in the paper for details. You are also encouraged to add your own reflection instruction here.
 
+To convert the generated data into training-ready D<sup>+</sup> formats, the following fields should be extracted and structured as follows:
+
+
 ```bash
 {
-  "id": "The unique identifier of the example.",
-  "question": "The input question.",
-  "answer": "The ground-truth answer to the question.",
-  "first_trial_reasoning": "The reasoning process generated during the first trial.", //用output字段中trial 1的reasoning字段
-  "first_trial_answer": "The generated answer in the first trial.", //用output字段中trial 1的generated_answer字段
-  "second_trial_reasoning": "The reasoning process generated during the second trial after reflection.",//用output字段中trial 2的reasoning字段
-  "second_trial_answer": "The revised answer in the second trial.",//用output字段中trial 2的generated_answer字段
-  "reflections": "A structured reflection on the first trial's reasoning and answer.",//用output字段中trial 2的reflection字段
-  "reason_prompt": [//用output字段中trial 1的reasoning_prompt字段
-    "Prompt for the first trial reasoning (see Appendix C.3).",
-    "Prompt for the second trial reasoning (see Appendix C.3)."
+  "id": "",
+  "question": "",
+  "answer": "",
+  "first_trial_reasoning": "", // Use the 'reasoning' field from 'trial 1'
+  "first_trial_answer": "", // Use the 'generated_answer' field from 'trial 1'
+  "second_trial_reasoning": "", // Use the 'reasoning' field from 'trial 2'
+  "second_trial_answer": "", // Use the 'generated_answer' field from 'trial 2'
+  "reflections": "", // Use the 'reflection' field from 'trial 2'
+  "reason_prompt": [ // Use the 'reasoning_prompt' field from 'trial 1'
+    "",
+    ""
   ],
-  "reflect_prompt": "Prompt for generating self-reflection (see Appendix C.4 for details)."//用output字段中trial 2的reflection_prompt字段
+  "reflect_prompt": "" // Use the 'reflection_prompt' field from 'trial 2'
 }
+```
+
+To convert the generated data into training-ready D<sup>±</sup> and D<sup>pref</sup> formats, the following fields should be extracted and structured as follows:
+
+```bash
+{
+  "id": "",
+  "question": "",
+  "answer": "",
+  "first_trial_reasoning": "", // Use the 'reasoning' field from 'trial 1'
+  "first_trial_answer": "", // Use the 'generated_answer' field from 'trial 1'
+  "second_trial_reasoning_chosen": "", // Use the 'reasoning' field from trial 2 in the preferred sample
+  "second_trial_answer_chosen": "", // Use the 'generated_answer' field from trial 2 in the preferred sample
+  "reflection_chosen": "", // Use the 'reflections' field from trial 2 in the preferred sample
+  "second_trial_reasoning_rejected": "", // Use the 'reasoning' field from trial 2 in the non-preferred sample
+  "second_trial_answer_rejected": "", // Use the 'generated_answer' field from trial 2 in the non-preferred sample
+  "reflection_rejected": "", // Use the 'reflections' field from trial 2 in the non-preferred output
 ```
 
 ## 🚀 Reflection Learning
