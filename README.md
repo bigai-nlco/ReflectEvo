@@ -62,7 +62,23 @@ Tasks can be specified via `--dataset` including LogiQA, MATH, MBPP, BIG-bench, 
 
 You can also determine the instructions to generate reflections through `--demand_type`.  Types of various instructions from the instruction pool can be seen in Appendix C.1 in the paper for details. You are also encouraged to add your own reflection instruction here.
 
-
+```bash
+{
+  "id": "The unique identifier of the example.",
+  "question": "The input question.",
+  "answer": "The ground-truth answer to the question.",
+  "first_trial_reasoning": "The reasoning process generated during the first trial.", //用output字段中trial 1的reasoning字段
+  "first_trial_answer": "The generated answer in the first trial.", //用output字段中trial 1的generated_answer字段
+  "second_trial_reasoning": "The reasoning process generated during the second trial after reflection.",//用output字段中trial 2的reasoning字段
+  "second_trial_answer": "The revised answer in the second trial.",//用output字段中trial 2的generated_answer字段
+  "reflections": "A structured reflection on the first trial's reasoning and answer.",//用output字段中trial 2的reflection字段
+  "reason_prompt": [//用output字段中trial 1的reasoning_prompt字段
+    "Prompt for the first trial reasoning (see Appendix C.3).",
+    "Prompt for the second trial reasoning (see Appendix C.3)."
+  ],
+  "reflect_prompt": "Prompt for generating self-reflection (see Appendix C.4 for details)."//用output字段中trial 2的reflection_prompt字段
+}
+```
 
 ## 🚀 Reflection Learning
 
