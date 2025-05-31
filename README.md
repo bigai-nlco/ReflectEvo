@@ -98,6 +98,7 @@ To convert the generated data into training-ready D<sup>±</sup> and D<sup>pref<
   "second_trial_reasoning_rejected": "", // Use the 'reasoning' field from trial 2 in the non-preferred sample
   "second_trial_answer_rejected": "", // Use the 'generated_answer' field from trial 2 in the non-preferred sample
   "reflection_rejected": "", // Use the 'reflections' field from trial 2 in the non-preferred output
+}
 ```
 
 ## 🚀 Reflection Learning
