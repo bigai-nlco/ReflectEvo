@@ -65,7 +65,7 @@ You can also determine the instructions to generate reflections through `--deman
 To convert the generated data into training-ready D<sup>+</sup> formats, the following fields should be extracted and structured as follows:
 
 
-```bash
+```js
 {
   "id": "",
   "question": "",
@@ -85,7 +85,7 @@ To convert the generated data into training-ready D<sup>+</sup> formats, the fol
 
 To convert the generated data into training-ready D<sup>±</sup> and D<sup>pref</sup> formats, the following fields should be extracted and structured as follows:
 
-```bash
+```js
 {
   "id": "",
   "question": "",
