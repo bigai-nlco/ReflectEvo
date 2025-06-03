@@ -146,8 +146,7 @@ PYTHONPATH=. python train/train_SFT_one_stage.py \
 
 For Direct Preference Optimization(DPO) training with both D<sup>±</sup> and D<sup>pref</sup>:
 ```bash
-ACCELERATE_LOG_LEVEL=info accelerate launch --config_file train/config/deepspeed_zero3.yaml --num_processes=4 train/train_DPO.py train/config/DPO_train_config.yaml
-```
+ ACCELERATE_LOG_LEVEL=info accelerate launch   --config_file train/config/deepspeed_zero3.yaml   --num_processes=4   train/train_DPO.py   --data_path train_data_path   train/config/DPO_train_config.yaml```
 
 ## 📊 Evaluation
 ### Generate prediction results
