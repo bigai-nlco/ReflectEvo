@@ -48,6 +48,16 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import datasets
 
+def build_user_prompt(row):
+    return (
+        "You are an advanced reasoning agent that can improve based on self-reflection. "
+        "You will be given a previous reasoning trial in which you were given a question to answer. "
+        "You were unsuccessful in answering the question. In a few sentences, Diagnose a possible reason for failure and devise a new, concise, high-level plan that aims to mitigate the same failure. Use complete sentences.\n\n"
+        f"Question: {row['question']}\n"
+        f"Previous trial and your incorrect solution: {row['first_trial_reasoning']}"
+    )
+
+
 def main():
     parser = H4ArgumentParser((ModelArguments, DataArguments, DPOConfig))
     model_args, data_args, training_args = parser.parse()
@@ -88,35 +98,24 @@ def main():
 
     # 创建用于训练和测试的数据格式
     formatted_data = []
-    for index, row in df.iterrows():
+    for _, row in df.iterrows():
+        user_input = build_user_prompt(row)
         formatted_data.append({
-            "prompt": row["reason_prompt"],  # 填充 prompt
             "chosen": [
-                {"content": row["reflection_prompt"], "role": "user"},
-                {"content": row["second_trial_reflection_chosen"], "role": "assistant"}
+                {"content": user_input, "role": "user"},
+                {"content": row["reflection_chosen"], "role": "assistant"}
             ],
             "rejected": [
-                {"content": row["reflection_prompt"], "role": "user"},
-                {"content": row["second_trial_reflection_rejected"], "role": "assistant"}
+                {"content": user_input, "role": "user"},
+                {"content": row["reflection_rejected"], "role": "assistant"}
             ]
         })
-    
-    dataset = datasets.Dataset.from_pandas(pd.DataFrame(formatted_data))
-
-    # 按照 9:1 的比例拆分数据集为训练集和测试集
-    train_dataset, test_dataset = train_test_split(dataset, test_size=0.1, random_state=42)
-
-    # 将数据集转换为 Parquet 格式并保存
-    train_dataset = datasets.Dataset.from_pandas(train_dataset)
-    test_dataset = datasets.Dataset.from_pandas(test_dataset)
-
-    train_dataset.to_parquet("train_dataset.parquet")
-    test_dataset.to_parquet("test_dataset.parquet")
-
-    # 过滤掉没有 `prompt` 的条目
-    raw_datasets['train'] = train_dataset.filter(lambda x: x['prompt'] is not None)
-    raw_datasets['test'] = test_dataset.filter(lambda x: x['prompt'] is not None)
-
+        
+    df_formatted = pd.DataFrame(formatted_data)
+    train_df, test_df = train_test_split(df_formatted, test_size=0.1, random_state=42)
+    train_dataset = datasets.Dataset.from_pandas(train_df)
+    test_dataset = datasets.Dataset.from_pandas(test_df)
+    raw_datasets = {'train': train_dataset, 'test': test_dataset}
     
     '''
     raw_datasets = get_datasets(
@@ -170,11 +169,13 @@ def main():
     # )
 
     # Replace column names with what TRL needs, text_chosen -> chosen and text_rejected -> rejected
+    '''
     for split in ["train", "test"]:
         raw_datasets[split] = raw_datasets[split].rename_columns(
             {"text_prompt": "prompt", "text_chosen": "chosen", "text_rejected": "rejected"}
         )
-
+    '''
+        
     # Log a few random samples from the training set:
     for index in random.sample(range(len(raw_datasets["train"])), 3):
         logger.info(f"Prompt sample {index} of the raw training set:\n\n{raw_datasets['train'][index]['prompt']}")
