@@ -59,6 +59,7 @@ def main():
     parser.add_argument("--num_of_data", "-n", type=int, help="number of data, 0 for all data", default=0)
     parser.add_argument("--demand_type", "-dt", type=str, help="The type of demand for the reflection task. Choose from 1 to 32.", default=1)
     parser.add_argument("--output_file", "-o", type=str, help="output directory", required=False)
+    parser.add_argument("--model_path", "-mp", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
     parser.add_argument("--model_name", "-mn", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
     parser.add_argument("--reflection", "-r", type=str, help="HOW to use refl,1:regenerate reflection，2:use pre-stored reflection from existing dataset，3: Skip reflection generation", default="1")
     parser.add_argument("--model_config", "-mc", type=str, help="YAML file address for model configuration.", default="")
@@ -72,7 +73,12 @@ def main():
     if args.dataset:
         DATASET = args.dataset.lower()
     NUM_OF_DATA = args.num_of_data
-    MODEL_PATH = f'/home/lijiaqi/PLMs/{args.model_name}'
+    MODEL_PATH = args.model_path
+
+    if args.model_name:
+        model_name = args.model_name
+    else:
+        model_name = os.path.basename(os.path.normpath(MODEL_PATH))
     FORMAT = ''
 
     test_suffix =''

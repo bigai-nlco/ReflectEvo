@@ -112,7 +112,7 @@ PYTHONPATH=. torchrun --master-port 5508 --nproc_per_node=1 train/train_SFT_two_
     --resume False \
     --output output_path \
     --model_path your_model_path \
-    ---ebs 20 \
+    --ebs 20 \
     --bs 8 \
     --ss steps \
     --wd 0.01 \
@@ -133,15 +133,13 @@ PYTHONPATH=. torchrun --master-port 5507 --nproc_per_node=1 train/train_SFT_two_
     --bs 8 \
     --wd 0.01 \
     --lr 1e-3 \
-    --gas 4 \
-    --folder training_data_path 
+    --gas 4
 ```
 
 For one stage training with D<sup>+</sup>:
 ```bash
 PYTHONPATH=. python train/train_SFT_one_stage.py \
     --task logiqa \
-    --input_data training_data_path \
     --output output_path \
     --model_path your_model_path \
 ```
