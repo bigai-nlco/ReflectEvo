@@ -57,7 +57,7 @@ def main():
     parser.add_argument("--use_first_answer", "-u", type=str, help="Whether to keep the first answer in existing dataset", default="true")
     parser.add_argument("--use_second_answer", "-us", type=str, help="Whether to keep the second answer in existing dataset", default="false")
     parser.add_argument("--num_of_data", "-n", type=int, help="number of data, 0 for all data", default=0)
-    parser.add_argument("--demand_type", "-dt", type=str, help="The type of demand for the reflection task. Choose from 1 to 32.", default=1)
+    parser.add_argument("--demand_type", "-dt", type=str, help="The type of demand for the reflection task.", default="1-1-1")
     parser.add_argument("--output_file", "-o", type=str, help="output directory", required=False)
     parser.add_argument("--model_path", "-mp", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
     parser.add_argument("--model_name", "-mn", type=str, help="model name", default='Meta-Llama-3-8B-Instruct')
