@@ -53,7 +53,7 @@ You can download the whole set of our **ReflectEvo-460K** here  ([🤗 HF Repo](
 
 For Reflection Generation, run
 ```bash
-python -m run.run --dataset Logiqa -model_name your_model_path --demand_type reflection_instruction_type
+PYTHONPATH=. python -m run.run --dataset Logiqa --model_name your_model_path --demand_type reflection_instruction_type
 ```
 
 The format of the generated sample data can be found in [data/examples/example_Reflection_raw.jsonl](data/examples/example_Reflection_raw.jsonl).

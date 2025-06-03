@@ -217,6 +217,8 @@ class BatchCOTReflectAgent:
         self.scratchpad: str = ""
         self.generated_answer = ""
         self.env.reset()
+        self.reason_prompt_str = self._build_agent_prompt() 
+        self.reflection_prompt_str = self._build_reflection_prompt()
 
         self.answer_prob = None
 
@@ -370,6 +372,10 @@ class BatchCOTReflectAgent:
             self.finished = observation[0]
             self.scratchpad += observation[1]
             self.generated_answer = observation[2]
+        
+        self.reason_prompt_str = self._build_agent_prompt()
+        self.reflection_prompt_str = self._build_reflection_prompt()
+
 
     def prompt_agent(self, prefix=None) -> str:
         return self.reason_llm(self._build_agent_prompt(), prefix=prefix)
@@ -394,7 +400,7 @@ class BatchCOTReflectAgent:
                 scratchpad = f"{previous_answer}\n{self.scratchpad}"
             else:
                 scratchpad = self.scratchpad
-            
+
             prompt = prompt.format(
                 question=self.question, scratchpad=scratchpad, tokenizer=self, answer=self.answer, demand=self.demand
             )
@@ -404,7 +410,7 @@ class BatchCOTReflectAgent:
                 scratchpad = f"{previous_answer}\n{self.scratchpad}"
             else:
                 scratchpad = self.scratchpad
-            
+
             prompt = prompt.format(
                 question=self.question, scratchpad=scratchpad, tokenizer=self, demand=self.demand
             )
