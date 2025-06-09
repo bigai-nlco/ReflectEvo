@@ -40,12 +40,13 @@
 ## 💁 Installation
 
    ```bash
-   git clone https://github.com/Sheng-Shu/ReflectEvo.git
+   git clone https://github.com/bigai-nlco/ReflectEvo.git
    cd ReflectEvo
    conda activate reflectevo
    pip install -r requirements.txt
    ```
 
+Please also install the [Alignment Handbook](https://github.com/huggingface/alignment-handbook).
    
 ## 🤔 Reflection Generation
 
